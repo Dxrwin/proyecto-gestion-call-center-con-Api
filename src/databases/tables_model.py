@@ -197,14 +197,9 @@ class Administrador(Base):
 class Login(Base):
     __tablename__ = "login"
 
-    id = Column(Integer,ForeignKey("empleados.id"), primary_key=True, index=True)
-    id_empleado = Column(Integer,ForeignKey("empleados.id"), nullable=True)
-    id_administrador = Column(Integer,ForeignKey("administradores.id"), nullable=True)
-    
-    #id del empleado o administrador que inicia sesion
-    #el id del empleado o administrador es una llave foranea que hace referencia a la tabla empleados o administradores
-    #id_empleado = Column(Integer, ForeignKey("empleados.id"))
-    #id_administrador = Column(Integer, ForeignKey("administradores.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    id_empleado = Column(Integer, ForeignKey("empleados.id"), nullable=True)
+    id_administrador = Column(Integer, ForeignKey("administradores.id"), nullable=True)
     correo = Column(String)
     contrasena = Column(String)
     rol = Column(String)

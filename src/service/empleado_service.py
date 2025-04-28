@@ -2,6 +2,7 @@
 from sqlalchemy.orm import Session
 from src.databases import tables_model
 from src.models.empleado_schema import EmpleadoCreate
+from fastapi import HTTPException
 
 
 #obtener todos los empleados
@@ -48,7 +49,8 @@ def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate):
 
         # Crear un nuevo registro en la tabla login
         nuevo_login = tables_model.Login(
-            id=nuevo_empleado.id,  # Usamos el ID del empleado recién creado
+            id_empleado=nuevo_empleado.id,  # Establecemos la llave foránea
+            id_administrador=None,  # Como es un empleado, esta llave foránea es nula
             correo=nuevo_empleado.correo,
             contrasena=empleado.contrasena,
             rol=empleado.rol  # Por defecto el empleado es un empleado normal (no admin)
@@ -57,9 +59,10 @@ def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate):
 
         # Confirmar la transacción
         db.commit()
-        return {"mensaje": "Empleado y login creados exitosamente"}
+        db.refresh(nuevo_empleado)  # Actualizamos el objeto con los datos de la base de datos
+        return nuevo_empleado  # Devolvemos el objeto Empleado completo
     except Exception as e:
         db.rollback()  # Revertir la transacción en caso de error
-        return {"error": str(e)}
+        raise HTTPException(status_code=400, detail=str(e))  # Lanzamos una excepción HTTP con el error
 
 

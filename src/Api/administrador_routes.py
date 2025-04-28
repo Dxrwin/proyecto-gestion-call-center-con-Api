@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.databases.db import SessionLocal
 from src.service import administrador_service
-from src.models.administrador_schema import AdministradorCreate, AdministradorOut
+from src.models.administrador_schema import AdministradorCreate, AdministradorOut,AdministradorBase
 
 #creamos un router para agrupar las rutas de empleado
 router = APIRouter()

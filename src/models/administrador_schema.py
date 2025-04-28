@@ -13,7 +13,7 @@ class AdministradorBase(BaseModel):
     rol: str  # por defecto el empleado es un empleado normal (no admin)
     
     
-#modelo para crear un empleado (con campo codigo)
+#modelo para crear un administrador (con campo codigo)
 class AdministradorCreate(AdministradorBase):
     id: int  # id unico del empleado (codigo)
     #area_trabajo: int  # id del area de trabajo donde trabaja el empleado (llave foranea)
