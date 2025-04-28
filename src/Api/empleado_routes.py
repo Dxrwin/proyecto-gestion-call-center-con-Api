@@ -25,6 +25,20 @@ def crear_Empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="error al insertar el empleado")
     return db_empleado
 
+
+
+
+#ruta para insertar empleado y login
+@router.post("/empleadoylogin", response_model=EmpleadoOut)
+def insertar_empleado_y_login(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
+    db_empleado = empleado_service.insertar_empleado_y_login(db, empleado)
+    
+    if not db_empleado:
+        raise HTTPException(status_code=400, detail="error al insertar el empleado")
+    return db_empleado
+
+
+
 #ruta para obtener todos los empleados
 @router.get("/empleado", response_model=list[EmpleadoOut])
 def obtenerEmpleados(db: Session = Depends(get_db)):

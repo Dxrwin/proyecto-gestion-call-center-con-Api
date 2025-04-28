@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrator</title>
+    <!--estilos externos: bootstrap, google-fonts, estilos css manualmente, biblioteca font awesome para los iconos-->
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/src/css/admin/admin-styles.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!--contenedor principal del dashboard-->
+    <div class="container-fluid">
+      <!-- clase row para organizar todo el contenido en columnas-->
+      <div class="row">
+        <!-- Sidebar -->
+        <!--barra lateral para la navegacion que ocupa 2-3 columnas de la pantalla-->
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+          <div class="position-sticky pt-3">
+            <div class="text-center mb-4">
+              <img
+                src="/src/assets/img/avatarimage.png"
+                alt="Admin Avatar"
+                class="rounded-circle sidebar-avatar"
+                id="sidebar-avatar"
+              />
+              <h5 class="text-white mt-2" id="sidebar-username">
+                nombre administrador
+              </h5>
+              <p class="text-muted" id="sidebar-position">Administrador</p>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="#profile-section"
+                  data-section="profile"
+                >
+                  <i class="fas fa-user me-2"></i> Perfil
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#employees-section"
+                  data-section="employees"
+                >
+                  <i class="fas fa-users me-2"></i> Empleados
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#departments-section"
+                  data-section="departments"
+                >
+                  <i class="fas fa-building me-2"></i> areas
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#reports-section"
+                  data-section="reports"
+                >
+                  <i class="fas fa-chart-bar me-2"></i> Reportes rendimiento
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#settings-section"
+                  data-section="settings"
+                >
+                  <i class="fas fa-cog me-2"></i> Configuracion
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- contenido principal, area principal del dashboard 9-10 columnas -->
+        <!--contiene el encabezado y desplegable para salir -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2" id="section-title">dashboard principal</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="dropdown">
+                <button
+                  class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-user-circle"></i> Salir
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="dropdownMenuButton"
+                >
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#profile-section"
+                      data-section="profile"
+                      >Perfil</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item" href="#">Salir</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- seccion perfil -->
+          <!-- contiene la informacion del perfil del administrador y la seguridad de la cuenta -->
+          <!--opcion de actualizar los datos del perfil y subir una foto de perfil-->
+          <section id="profile-section" class="dashboard-section active">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-body text-center">
+                    <div class="position-relative d-inline-block mb-3">
+                      <img
+                        src="/src/assets/img/avatarimage.png"
+                        alt="Profile Picture"
+                        class="rounded-circle profile-picture"
+                        id="profile-picture"
+                      />
+                      <button
+                        class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
+                        id="change-picture-btn"
+                      >
+                        <i class="fas fa-camera"></i>
+                      </button>
+                    </div>
+                    <h4 id="profile-name">"nombre del administrador"</h4>
+                    <p class="text-muted" id="profile-position">
+                      Administrador
+                    </p>
+                    <p class="text-muted" id="profile-department">CEO</p>
+                    <input
+                      type="file"
+                      id="profile-picture-input"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </div>
+                </div>
+                <div class="card mt-3">
+                  <div class="card-header">cuenta de seguridad</div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <button
+                        class="btn btn-outline-primary w-100"
+                        id="change-password-btn"
+                      >
+                        <i class="fas fa-key me-2"></i> cambiar contraseña
+                      </button>
+                    </div>
+                    <div class="mb-3">
+                      <button
+                        class="btn btn-outline-primary w-100"
+                        id="enable-2fa-btn"
+                      >
+                        <i class="fas fa-shield-alt me-2"></i> habilitar
+                        autentificacion por credenciales
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="card">
+                  <div
+                    class="card-header d-flex justify-content-between align-items-center"
+                  >
+                    <h5 class="mb-0">informacion personal</h5>
+                    <button
+                      class="btn btn-sm btn-primary"
+                      id="edit-profile-btn"
+                    >
+                      <i class="fas fa-edit me-1"></i> Editar
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <form id="profile-form">
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="first-name" class="form-label"
+                            >nombres</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="first-name"
+                            disabled
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="last-name" class="form-label"
+                            >apellidos</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="last-name"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="email" class="form-label">correo</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            disabled
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="phone" class="form-label">telefono</label>
+                          <input
+                            type="tel"
+                            class="form-control"
+                            id="phone"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="role" class="form-label">Rol</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="role"
+                            disabled
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="department" class="form-label"
+                            >Area de trabajo</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="department"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-12">
+                          <label for="address" class="form-label"
+                            >direccion</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="address"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="text-end"
+                        id="profile-actions"
+                        style="display: none"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-secondary me-2"
+                          id="cancel-edit-btn"
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          id="save-profile-btn"
+                        >
+                          guardar
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- seccion de empleados -->
+          <!-- contiene la gestion de empleados, busqueda, filtros y tabla de empleados -->
+          <!-- permite agregar, editar y eliminar empleados -->
+
+          <section id="employees-section" class="dashboard-section">
+            <div class="card">
+              <div
+                class="card-header d-flex justify-content-between align-items-center"
+              >
+                <h5 class="mb-0">gestion de empleados</h5>
+                <div>
+                  <button class="btn btn-sm btn-primary" id="add-employee-btn">
+                    <i class="fas fa-plus me-1"></i> añadir empleado
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="buscar empleado"
+                        id="employee-search"
+                      />
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="search-btn"
+                      >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <select class="form-select" id="department-filter">
+                      <option value="">todas las areas</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Sales">Sales</option>
+                      <option value="HR">HR</option>
+                      <option value="Finance">Finance</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select class="form-select" id="status-filter">
+                      <option value="">todos los estados</option>
+                      <option value="Active">Activo</option>
+                      <option value="Inactive">Inactivo</option>
+                      <option value="On Leave">en espera</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="select-all-employees"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="select-all-employees"
+                            ></label>
+                          </div>
+                        </th>
+                        <th>Nombre</th>
+                        <th>correo</th>
+                        <th>Area</th>
+                        <th>Posicion</th>
+                        <th>Stado</th>
+                        <th>Accciones</th>
+                        <th>Detalles</th>
+                      </tr>
+                    </thead>
+                    <tbody id="employees-table-body">
+                      <tr>
+                        <td colspan="8" class="text-center">
+                          cargando empleados...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-3"
+                >
+                  <div>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      id="delete-selected-btn"
+                      disabled
+                    >
+                      <i class="fas fa-trash me-1"></i> eliminar seleccionado
+                    </button>
+                  </div>
+                  <nav aria-label="Employee pagination">
+                    <ul class="pagination mb-0">
+                      <li class="page-item disabled">
+                        <a
+                          class="page-link"
+                          href="#"
+                          tabindex="-1"
+                          aria-disabled="true"
+                          >anterior</a
+                        >
+                      </li>
+                      <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">siguiente</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- seccion de la Areas -->
+          <section id="departments-section" class="dashboard-section">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">gestion de areas de la empresa</h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted">gestion de las areas internas</p>
+                <div class="alert alert-info">
+                  esta seccion es solo para administradores, y aun esta en
+                  desarrollo
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- seccion de reportes de rendimiento -->
+          <!-- contiene graficos de rendimiento de empleados y departamentos, distribucion de casos y tiempo de resolucion -->
+          <!-- permite filtrar por periodo y departamento -->
+          <section id="reports-section" class="dashboard-section">
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="card">
+                  <div
+                    class="card-header d-flex justify-content-between align-items-center"
+                  >
+                    <h5 class="mb-0">Datos de Rendimiento</h5>
+                    <div class="d-flex gap-2">
+                      <select
+                        class="form-select form-select-sm"
+                        id="report-period"
+                      >
+                        <option value="week">esta semana</option>
+                        <option value="month" selected>este mes</option>
+                        <option value="quarter">este trimestre</option>
+                        <option value="year">este año</option>
+                      </select>
+                      <select
+                        class="form-select form-select-sm"
+                        id="report-department-filter"
+                      >
+                        <option value="">todas las areas</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="HR">HR</option>
+                        <option value="Finance">Finance</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--tarjetas para cada grafico-->
+
+            <!-- cada tarjeta contiene un grafico diferente, con su respectivo id para ser manipulado por chart.js -->
+            <!--tarjeta de rendimiento de los empleados-->
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h5 class="mb-0">Datos de empleados</h5>
+                  </div>
+                  <div class="card-body">
+                    <div
+                      id="employee-performance-chart"
+                      style="height: 300px"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <!--tarjeta de rendimiento de las areas-->
+              <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h5 class="mb-0">Datos de las areas</h5>
+                  </div>
+                  <div class="card-body">
+                    <div
+                      id="department-performance-chart"
+                      style="height: 300px"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--tarjeta de distribucion de casos-->
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h5 class="mb-0">distribucion y tipos de casos</h5>
+                  </div>
+                  <div class="card-body">
+                    <div
+                      id="case-type-distribution-chart"
+                      style="height: 300px"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <!--tarjeta de tiempo de resolucion-->
+              <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                  <div class="card-header">
+                    <h5 class="mb-0">tiempo de resolucion de los casos</h5>
+                  </div>
+                  <div class="card-body">
+                    <div id="resolution-time-chart" style="height: 300px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--tarjeta de rendimiento de los empleados-->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">Top rendimientos</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Cases Resolved</th>
+                            <th>Avg. Resolution Time</th>
+                          </tr>
+                        </thead>
+                        <tbody id="top-performers-table-body">
+                          <tr>
+                            <td colspan="5" class="text-center">
+                              cargando datos de rendimiento...
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Seccion de configuracion -->
+          <!-- contiene la configuracion del sistema, opciones de seguridad y privacidad -->
+          <!-- permite configurar la autenticacion de dos factores y la privacidad de los datos -->
+          <section id="settings-section" class="dashboard-section">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">configuracion del sistema</h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted">
+                  configuracion de la aplicacion y opciones de seguridad
+                </p>
+                <div class="alert alert-info">
+                  esta seccion aun esta en desarrollo y no esta disponible para
+                  el uso
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- modal empleado -->
+    <!-- contiene el formulario para agregar o editar un empleado -->
+    <!-- se muestra al hacer clic en el boton de agregar empleado o editar empleado -->
+    <div
+      class="modal fade"
+      id="employee-modal"
+      tabindex="-1"
+      aria-labelledby="employee-modal-label"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="employee-modal-label">
+              añadir empleado
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="employee-form">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="emp-first-name" class="form-label">Nombres</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emp-first-name"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="emp-last-name" class="form-label"
+                    >Apellidos</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emp-last-name"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="emp-email" class="form-label">Correo</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="emp-email"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="emp-phone" class="form-label">Telefono</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="emp-phone"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="emp-department" class="form-label">Area</label>
+                  <select class="form-select" id="emp-department" required>
+                    <option value="">Select Department</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Sales">Sales</option>
+                    <option value="HR">HR</option>
+                    <option value="Finance">Finance</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="emp-position" class="form-label">Posiccion</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emp-position"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="emp-hire-date" class="form-label"
+                    >Fecha de contratacion</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="emp-hire-date"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="emp-status" class="form-label">estado</label>
+                  <select class="form-select" id="emp-status" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="On Leave">On Leave</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="emp-address" class="form-label">correo</label>
+                <input type="text" class="form-control" id="emp-address" />
+              </div>
+              <div class="mb-3">
+                <label for="emp-notes" class="form-label">Notas</label>
+                <textarea
+                  class="form-control"
+                  id="emp-notes"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="save-employee-btn"
+            >
+              guardar empleado
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal de confirmacion al eliminar un empleado -->
+    <!-- contiene el mensaje de confirmacion y los botones para cancelar o confirmar la eliminacion -->
+    <!-- se muestra al hacer clic en el boton de eliminar empleado -->
+    <div
+      class="modal fade"
+      id="delete-confirmation-modal"
+      tabindex="-1"
+      aria-labelledby="delete-confirmation-modal-label"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="delete-confirmation-modal-label">
+              Confirmar eliminacion
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="delete-confirmation-content">
+            esta seguro de que desea eliminar este empleado? Esta accion no se
+            puede deshacer.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirm-delete-btn"
+            >
+              eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal para cambio de contraseña-->
+    <!-- contiene el formulario para cambiar la contraseña del administrador -->
+
+    <div
+      class="modal fade"
+      id="change-password-modal"
+      tabindex="-1"
+      aria-labelledby="change-password-modal-label"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="change-password-modal-label">
+              Cambiar contraseña
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="change-password-form">
+              <div class="mb-3">
+                <label for="current-password" class="form-label"
+                  >Contraseña actual</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="current-password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="new-password" class="form-label"
+                  >Nueva contraseña</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="new-password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="confirm-password" class="form-label"
+                  >Confirmar nueva contraseña</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirm-password"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="save-password-btn"
+            >
+              Cambiar contraseña
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Axios para solicitudes http a la Api -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Chart.js biblioteca para los graficos-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- archivos necesarios para el dashboard -->
+    <!-- archivo que contiene las funciones de las navegaciones entre las secciones-->
+    <script src="/src/js/admin/admin-main.js"></script>
+
+    <!-- archivo que contiene las funciones para la seccion de perfil del administrador -->
+    <script src="/src/js/admin/admin-profile.js"></script>
+
+    <!-- archivo que contiene las funciones para la seccion de empleados -->
+    <script src="/src/js/admin/admin-employees.js"></script>
+
+    <!-- archivo que contiene las funciones para la seccion de reportes de rendimiento -->
+    <script src="/src/js/admin/admin-reports.js"></script>
+  </body>
+</html>

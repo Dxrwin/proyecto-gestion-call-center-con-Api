@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalles de Usuario - Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/src/css/admin/detalles-agentes.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <!-- Flatpickr Calendar -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+          <div class="position-sticky pt-3">
+            <div class="text-center mb-4">
+              <img
+                src="/src/assets/img/avatarimage.png"
+                alt="Admin Avatar"
+                class="rounded-circle sidebar-avatar"
+                id="sidebar-avatar"
+              />
+              <h5 class="text-white mt-2" id="sidebar-username">Admin Name</h5>
+              <p class="text-muted" id="sidebar-position">Administrator</p>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="admin.html">
+                  <i class="fas fa-arrow-left me-2"></i> Volver al Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="#info-section"
+                  data-section="info"
+                >
+                  <i class="fas fa-user me-2"></i> Información Personal
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#requests-section"
+                  data-section="requests"
+                >
+                  <i class="fas fa-clipboard-list me-2"></i> Solicitudes
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#performance-section"
+                  data-section="performance"
+                >
+                  <i class="fas fa-chart-line me-2"></i> Rendimiento
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2" id="section-title">Detalles del Empleado</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <a href="admin.html" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Volver
+              </a>
+            </div>
+          </div>
+
+          <!-- Employee Info Section -->
+          <section id="info-section" class="dashboard-section active">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card mb-4">
+                  <div class="card-body text-center">
+                    <img
+                      src="/src/assets/img/avatarimage.png"
+                      alt="Employee Avatar"
+                      class="rounded-circle profile-picture mb-3"
+                      id="employee-avatar"
+                    />
+                    <h4 id="employee-name">Nombre del Empleado</h4>
+                    <p class="text-muted" id="employee-position">Posición</p>
+                    <p class="text-muted" id="employee-department">
+                      Departamento
+                    </p>
+                    <p class="badge bg-primary" id="employee-status">Estado</p>
+                  </div>
+                </div>
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Habilidades</h5>
+                  </div>
+                  <div class="card-body">
+                    <div id="employee-skills">
+                      <!-- Skills will be populated here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">Información Personal</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">ID de Empleado</label>
+                        <p id="employee-id">EMP-001</p>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold"
+                          >Fecha de Contratación</label
+                        >
+                        <p id="employee-hire-date">01/01/2022</p>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Email</label>
+                        <p id="employee-email">email@example.com</p>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Teléfono</label>
+                        <p id="employee-phone">(555) 123-4567</p>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold"
+                          >Fecha de Nacimiento</label
+                        >
+                        <p id="employee-birth-date">01/01/1990</p>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Dirección</label>
+                        <p id="employee-address">123 Main St, Anytown, USA</p>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold"
+                          >Contacto de Emergencia</label
+                        >
+                        <p id="employee-emergency-contact">Jane Doe</p>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold"
+                          >Teléfono de Emergencia</label
+                        >
+                        <p id="employee-emergency-phone">(555) 987-6543</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <label class="form-label fw-bold">Notas</label>
+                        <p id="employee-notes">Notas sobre el empleado.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Requests Section -->
+          <section id="requests-section" class="dashboard-section">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">Solicitudes del Empleado</h5>
+              </div>
+              <div class="card-body">
+                <ul class="nav nav-tabs" id="requestTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link active"
+                      id="schedule-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#schedule-requests"
+                      type="button"
+                      role="tab"
+                      aria-controls="schedule-requests"
+                      aria-selected="true"
+                    >
+                      Cambios de Horario
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="timeoff-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#timeoff-requests"
+                      type="button"
+                      role="tab"
+                      aria-controls="timeoff-requests"
+                      aria-selected="false"
+                    >
+                      Permisos
+                    </button>
+                  </li>
+                </ul>
+                <div class="tab-content mt-3" id="requestTabsContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="schedule-requests"
+                    role="tabpanel"
+                    aria-labelledby="schedule-tab"
+                  >
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Fecha Solicitada</th>
+                            <th>Empleado para Intercambio</th>
+                            <th>Motivo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody id="schedule-requests-table">
+                          <!-- Schedule change requests will be populated here -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="timeoff-requests"
+                    role="tabpanel"
+                    aria-labelledby="timeoff-tab"
+                  >
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Tipo</th>
+                            <th>Motivo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody id="timeoff-requests-table">
+                          <!-- Time off requests will be populated here -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Performance Section -->
+          <section id="performance-section" class="dashboard-section">
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <div class="card performance-card bg-primary text-white">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Productividad</h5>
+                    <p class="performance-value" id="productivity-value">85%</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card performance-card bg-success text-white">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Calidad</h5>
+                    <p class="performance-value" id="quality-value">90%</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card performance-card bg-info text-white">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Trabajo en Equipo</h5>
+                    <p class="performance-value" id="teamwork-value">80%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">Rendimiento Mensual</h5>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="performance-chart" height="300"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="mb-0">Agendar Evento</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="text-center">
+                      <button
+                        id="schedule-event-btn"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#schedule-event-modal"
+                      >
+                        <i class="fas fa-calendar-plus me-2"></i>Agendar Evento
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Request Action Modal -->
+    <div
+      class="modal fade"
+      id="request-action-modal"
+      tabindex="-1"
+      aria-labelledby="request-action-modal-label"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="request-action-modal-label">
+              Acción de Solicitud
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="request-action-form">
+              <input type="hidden" id="request-id" />
+              <input type="hidden" id="request-type" />
+              <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="request-status"
+                    id="status-approve"
+                    value="approved"
+                    checked
+                  />
+                  <label class="form-check-label" for="status-approve">
+                    Aprobar
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="request-status"
+                    id="status-reject"
+                    value="rejected"
+                  />
+                  <label class="form-check-label" for="status-reject">
+                    Rechazar
+                  </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="request-comments" class="form-label"
+                  >Comentarios</label
+                >
+                <textarea
+                  class="form-control"
+                  id="request-comments"
+                  rows="3"
+                  placeholder="Ingrese comentarios o razones para la decisión..."
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="save-request-action"
+              data-bs-dismiss="modal"
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Scheduling Modal -->
+    <div
+      class="modal fade"
+      id="schedule-event-modal"
+      tabindex="-1"
+      aria-labelledby="schedule-event-modal-label"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="schedule-event-modal-label">
+              Agendar Evento para el Empleado
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="schedule-event-form">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Empleado</label>
+                  <p id="event-employee-name">Nombre del Empleado</p>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Departamento</label>
+                  <p id="event-employee-department">Departamento</p>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="event-date" class="form-label fw-bold"
+                    >Fecha</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="event-date"
+                    placeholder="Seleccione una fecha"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="event-time" class="form-label fw-bold"
+                    >Hora</label
+                  >
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="event-time"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="event-title" class="form-label fw-bold"
+                  >Título del Evento</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="event-title"
+                  placeholder="Ingrese el título del evento"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="event-reason" class="form-label fw-bold"
+                  >Descripción/Razón</label
+                >
+                <textarea
+                  class="form-control"
+                  id="event-reason"
+                  rows="3"
+                  placeholder="Ingrese la descripción o razón del evento..."
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="event-type" class="form-label fw-bold"
+                  >Tipo de Evento</label
+                >
+                <select class="form-select" id="event-type" required>
+                  <option value="">Seleccione un tipo...</option>
+                  <option value="meeting">Reunión</option>
+                  <option value="training">Capacitación</option>
+                  <option value="review">Evaluación</option>
+                  <option value="other">Otro</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="save-event-btn"
+              data-bs-dismiss="modal"
+            >
+              Agendar Evento
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios for API requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+    <!-- Custom JS -->
+    <script src="/src/js/admin/detalles-usuario.js"></script>
+
+    <script src="/src/js/admin/detalles-usuario-main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+/* Estilos personalizados */
+body {
+    background-color: #f8f9fa; /* Un fondo gris claro */
+}
+
+.card {
+    border: none; /* Elimina el borde predeterminado de la tarjeta */
+}

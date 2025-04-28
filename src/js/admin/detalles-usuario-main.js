@@ -1,0 +1,138 @@
+//para evitar conflictos de variables globales se usa la funcion anonima autoejecutable (IIFE)
+// invoca la función inmediatamente para encapsular el código y evitar la contaminación del espacio de nombres global
+
+(() => {
+  //DOM Elements
+  let navLinks = document.querySelectorAll(
+    ".nav-link[data-section], .dropdown-item[data-section]"
+  );
+  const sections = document.querySelectorAll(".dashboard-section");
+  const sectionTitle = document.getElementById("section-title");
+
+  /**
+   * Initialize the dashboard
+   * Sets up event listeners and loads initial data
+   */
+  function initDashboard() {
+    console.log("Initializing dashboard...");
+
+    // Ocultar todas las secciones primero
+    document.querySelectorAll(".dashboard-section").forEach((section) => {
+      section.style.display = "none";
+    });
+
+    // Set up navigation
+    setupNavigation();
+
+    // Initialize the current section (default: profile)
+    showSection("info");
+
+    // Marcar el enlace de perfil como activo
+    document
+      .querySelector('.nav-link[data-section="info"]')
+      .classList.add("active");
+
+    console.log("Dashboard initialized");
+  }
+
+  /**
+   * Set up navigation between dashboard sections
+   */
+  function setupNavigation() {
+    console.log("Setting up navigation...");
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const section = link.getAttribute("data-section");
+        console.log(`Navigating to section: ${section}`);
+
+        // Update active state in sidebar
+        document.querySelectorAll(".nav-link").forEach((navLink) => {
+          navLink.classList.remove("active");
+        });
+
+        // Activar el enlace actual
+        const activeLink = document.querySelector(
+          `.nav-link[data-section="${section}"]`
+        );
+        if (activeLink) {
+          activeLink.classList.add("active");
+        }
+
+        // Mostrar la sección correspondiente
+        showSection(section);
+      });
+    });
+  }
+
+  /**
+   * Show the specified section and hide others
+   * @param {string} sectionId - The ID of the section to show
+   */
+  function showSection(sectionId) {
+    console.log(`Showing section: ${sectionId}`);
+
+    // Ocultar todas las secciones
+    sections.forEach((section) => {
+      section.style.display = "none";
+      section.classList.remove("active");
+    });
+
+    // Mostrar la sección activa
+    const activeSection = document.getElementById(`${sectionId}-section`);
+    if (activeSection) {
+      activeSection.style.display = "block";
+      activeSection.classList.add("active");
+
+      console.log(`Section ${sectionId} activated`);
+
+      // Update section title
+      switch (sectionId) {
+        case "info-section":
+          sectionTitle.textContent = "informacion del empleado";
+          break;
+        case "requests-section":
+          sectionTitle.textContent = "solicitudes de empleado";
+          break;
+        case "performance-section":
+          sectionTitle.textContent = "desempeño del empleado";
+          break;
+        default:
+          sectionTitle.textContent = "Admin Dashboard";
+      }
+    } else {
+      console.error(`Section with ID ${sectionId}-section not found`);
+    }
+  }
+
+  /**
+   * Show a notification message
+   * @param {string} message - The message to display
+   * @param {string} type - The type of notification (success, error, info, warning)
+   */
+  function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement("div");
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+    notification.style.zIndex = "9999";
+    notification.innerHTML = `
+              ${message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          `;
+
+    // Add to document
+    document.body.appendChild(notification);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      notification.classList.remove("show");
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 150);
+    }, 5000);
+  }
+
+  // Initialize the dashboard when the DOM is fully loaded
+  document.addEventListener("DOMContentLoaded", initDashboard);
+})();

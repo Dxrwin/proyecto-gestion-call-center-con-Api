@@ -176,9 +176,7 @@ class Administrador(Base):
     __tablename__ = "administradores"
 
     id = Column(Integer, primary_key=True, index=True)
-    #id unico del administrador
     Id_administrador = Column(String, unique=True)
-    
     imagen_perfil = Column(String)
     nombre = Column(String)
     apellido = Column(String)
@@ -194,3 +192,19 @@ class Administrador(Base):
     #relaciones
     #relacionar la tabla administrador con la tabla area de trabajo
     #area_trabajo = relationship("AreaTrabajo", back_populates="administrador")
+    
+#definimos el modelo de la tabla login para el empleado y el administrador
+class Login(Base):
+    __tablename__ = "login"
+
+    id = Column(Integer,ForeignKey("empleados.id"), primary_key=True, index=True)
+    id_empleado = Column(Integer,ForeignKey("empleados.id"), nullable=True)
+    id_administrador = Column(Integer,ForeignKey("administradores.id"), nullable=True)
+    
+    #id del empleado o administrador que inicia sesion
+    #el id del empleado o administrador es una llave foranea que hace referencia a la tabla empleados o administradores
+    #id_empleado = Column(Integer, ForeignKey("empleados.id"))
+    #id_administrador = Column(Integer, ForeignKey("administradores.id"))
+    correo = Column(String)
+    contrasena = Column(String)
+    rol = Column(String)
