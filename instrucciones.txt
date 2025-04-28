@@ -1,0 +1,7 @@
+en caso de no tener clonado el repositorio ahcer:
+1 crear entorno virtual = python -m venv venv
+2. instalar dependencias = pip install -r requeriments
+3.activar el entorno virtual = .\venv\Scripts\activate
+
+dado el caso que tenga todos los aarchivos sincronizadosy completos:
+4.levantar servidor = unicorn main:app --reload
