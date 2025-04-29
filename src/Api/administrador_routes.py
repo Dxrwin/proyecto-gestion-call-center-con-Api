@@ -44,3 +44,14 @@ def insertar_admin_y_login(administrador:AdministradorCreate, db: Session = Depe
 def obteneradministradores(db: Session = Depends(get_db)):
     administradores = administrador_service.get_administradores(db)
     return administradores
+
+#ruta para obtener los datos de un administrador por ID
+@router.get("/administrador/{id_administrador}")
+def obtener_datos_admin(id_administrador: int, db: Session = Depends(get_db)):
+    try:
+        datos_admin = administrador_service.obtener_datos_administrador(db, id_administrador)
+        return datos_admin
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener datos del administrador: {str(e)}")

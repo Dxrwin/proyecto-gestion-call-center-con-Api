@@ -34,6 +34,9 @@ const changePasswordForm = document.getElementById("change-password-form");
 // Original profile data for cancellation
 const originalProfileData = {};
 
+// Constantes para rutas
+const RUTA_BASE_IMAGENES = "/src/assets/img/";
+
 /**
  * Initialize profile functionality
  */
@@ -59,71 +62,139 @@ function initProfile() {
  * Load admin profile data from API
  */
 function loadAdminProfile() {
-  // Fetch admin profile data from API
   fetchAdminProfile()
     .then((data) => {
-      // Update form fields with profile data
-      document.getElementById("first-name").value = data.firstName;
-      document.getElementById("last-name").value = data.lastName;
-      document.getElementById("email").value = data.email;
-      document.getElementById("phone").value = data.phone;
-      document.getElementById("role").value = data.role;
-      document.getElementById("department").value = data.department;
-      document.getElementById("address").value = data.address;
+      console.log("Datos recibidos en loadAdminProfile:", data);
+      
+      // Actualizar los campos del formulario
+      document.getElementById("first-name").value = data.nombre || "";
+      document.getElementById("last-name").value = data.apellido || "";
+      document.getElementById("email").value = data.correo || "";
+      document.getElementById("phone").value = data.telefono || "";
+      document.getElementById("role").value = data.rol || "";
 
-      // Update profile header
-      document.getElementById(
-        "profile-name"
-      ).textContent = `${data.firstName} ${data.lastName}`;
-      document.getElementById("profile-position").textContent = data.role;
-      document.getElementById("profile-department").textContent =
-        data.department;
+      // Actualizar la información en el encabezado del perfil
+      document.getElementById("profile-name").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+      document.getElementById("profile-position").textContent = data.rol || "";
 
-      // Update sidebar
-      document.getElementById(
-        "sidebar-username"
-      ).textContent = `${data.firstName} ${data.lastName}`;
-      document.getElementById("sidebar-position").textContent = data.role;
+      // Actualizar la información en el sidebar
+      document.getElementById("sidebar-username").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+      document.getElementById("sidebar-position").textContent = data.rol || "";
 
-      // Update profile picture if available
-      if (data.profilePicture) {
-        profilePicture.src = data.profilePicture;
-        sidebarAvatar.src = data.profilePicture;
+      // Actualizar la imagen de perfil si existe
+      if (data.imagen_perfil) {
+        const rutaImagen = `${RUTA_BASE_IMAGENES}${data.imagen_perfil}`;
+        console.log("Ruta completa de la imagen:", rutaImagen);
+        
+        // Verificar si la imagen existe antes de asignarla
+        const img = new Image();
+        img.onload = function() {
+          profilePicture.src = rutaImagen;
+          sidebarAvatar.src = rutaImagen;
+        };
+        img.onerror = function() {
+          console.error("Error al cargar la imagen:", rutaImagen);
+          // Asignar una imagen por defecto si la imagen no se encuentra
+          profilePicture.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+          sidebarAvatar.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+        };
+        img.src = rutaImagen;
+      } else {
+        // Si no hay imagen de perfil, usar la imagen por defecto
+        profilePicture.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+        sidebarAvatar.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
       }
 
-      // Store original data
+      // Almacenar los datos originales
       storeOriginalProfileData();
     })
     .catch((error) => {
-      console.error("Error loading admin profile:", error);
-      showNotification("Failed to load profile data", "error");
+      console.error("Error al cargar el perfil del administrador:", error);
+      showNotification("Error al cargar los datos del perfil", "error");
     });
 }
 
-/**
- * Fetch admin profile data from API (simulated)
- * @returns {Promise} - Promise that resolves with admin profile data
- */
+
+//realiza una peticion a la api para pedir los datos del perfil del administrador
 function fetchAdminProfile() {
+  //obtiene el id y el rol del usuario desde el localstorage
+  //hace una peticion get al servidor para obtener los datos del admin
+  //procesa y devuelve los datos
+  const idUsuario = localStorage.getItem("id_usuario");
+  const rolUsuario = localStorage.getItem("rol");
+
+  console.log("ID Usuario desde localStorage:", idUsuario);
+  console.log("Rol Usuario desde localStorage:", rolUsuario);
+
+  if (!idUsuario || !rolUsuario) {
+    console.error("No se encontraron datos de usuario en localStorage");
+    return Promise.reject("Usuario no autenticado");
+  }
+
   return axios
-    .get("https://api.example.com/admin/profile")
+    .get(`http://localhost:8000/administrador/${idUsuario}`)
     .then((response) => {
-      return response.data;
+      const userData = response.data;
+      console.log("Datos completos del administrador:", userData);
+      
+      // Verifica si cada dato es dato o undefined antes de asignarlo
+      const nombre = userData?.nombre || "";
+      const apellido = userData?.apellido || "";
+      const correo = userData?.correo || "";
+      const telefono = userData?.telefono || "";
+      const rol = userData?.rol || "";
+      const imagen_perfil = userData?.imagen_perfil || "";
+
+      console.log("Datos procesados y validados para asignarlos a los campos:", {
+        nombre,
+        apellido,
+        correo,
+        telefono,
+        rol,
+        imagen_perfil
+      });
+
+      //los datos recibidos se asignan a los elementos del dom
+
+      // Actualizar los campos del formulario
+      const firstNameInput = document.getElementById("first-name");
+      const lastNameInput = document.getElementById("last-name");
+      const emailInput = document.getElementById("email");
+      const phoneInput = document.getElementById("phone");
+      const roleInput = document.getElementById("role");
+
+      firstNameInput.value = nombre;
+      lastNameInput.value = apellido;
+      emailInput.value = correo;
+      phoneInput.value = telefono;
+      roleInput.value = rol;
+
+      // Actualizar la información en el encabezado del perfil
+      const profileName = document.getElementById("profile-name");
+      const profilePosition = document.getElementById("profile-position");
+      
+      if (profileName) profileName.textContent = `${nombre} ${apellido}`;
+      if (profilePosition) profilePosition.textContent = rol;
+
+      // Actualizar la información en el sidebar
+      const sidebarUsername = document.getElementById("sidebar-username");
+      const sidebarPosition = document.getElementById("sidebar-position");
+      
+      if (sidebarUsername) sidebarUsername.textContent = `${nombre} ${apellido}`;
+      if (sidebarPosition) sidebarPosition.textContent = rol;
+
+      // Si hay una imagen de perfil, actualizarla
+      if (imagen_perfil) {
+        if (profilePicture) profilePicture.src = imagen_perfil;
+        if (sidebarAvatar) sidebarAvatar.src = imagen_perfil;
+      }
+
+      return userData;
     })
     .catch((error) => {
-      console.error("API Error:", error);
-      // If API fails, return mock data for demonstration
-      return {
-        id: 1,
-        firstName: "Admin",
-        lastName: "User",
-        email: "admin@example.com",
-        phone: "(555) 123-4567",
-        role: "System Administrator",
-        department: "Management",
-        address: "123 Admin St, Admin City, AC 12345",
-        profilePicture: null,
-      };
+      console.error("Error al obtener el perfil:", error);
+      showNotification("Error al cargar el perfil del usuario", "error");
+      throw error;
     });
 }
 

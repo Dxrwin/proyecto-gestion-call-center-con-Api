@@ -19,98 +19,89 @@
         }
         }*/
 
-const usuario_prueba = {
+/*const usuario_prueba = {
   email: "user@example.com",
   password: "123456",
+};*/
+
+// Constantes y configuración
+const API_URL = "http://localhost:8000";
+const ROUTES = {
+    ADMIN: "/pages/admin/admin.html",
+    AGENTE: "/pages/user/dashboard_agente.html"
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-  const loginForm = document.getElementById("login-form");
-  const messageDiv = document.getElementById("message");
+// Funciones de utilidad
+const mostrarMensajeError = (elemento, mensaje) => {
+    elemento.textContent = mensaje;
+    elemento.className = "mt-3 text-center text-danger";
+};
 
-  loginForm.addEventListener("submit", async function (event) {
-    event.preventDefault(); // Evita la recarga de la página al enviar el formulario
-
-    const usernameInput = document.getElementById("username").value;
-    const passwordInput = document.getElementById("password").value;
-    const username = usernameInput;
-    const password = passwordInput;
-
-    try {
-      const response = await axios.post("http://localhost:8000/obtenerlogin", {
-        correo: username,
-        contrasena: password,
-      });
-      const loginData = response.data;
-      console.log("datos de la respuesta de la api:", loginData);
-      alert(`Bienvenido, ${loginData.correo}. Tu rol es: ${loginData.rol}`);
-      // Redirigir al usuario según su rol
-      if (loginData.rol === "administrador") {
-        window.location.href = "/pages/admin/admin.html";
-      } else {
-        window.location.href = "/pages/user/dashboard_agente.html";
-      }
-    } catch (error) {
-      console.error(
-        "Error al validar el login:",
-        error.response?.data?.detail || error.message
-      );
-      //alert("Correo o contraseña incorrectos");
-      //creamos un div para mostrar el mensaje de error
-      messageDiv.textContent = "Credenciales incorrectas. Inténtalo de nuevo.";
-      //agregamos estilo al div
-      messageDiv.className = "mt-3 text-center text-danger"; // Clase para texto rojo
+const validarCampos = (username, password) => {
+    if (!username || !password) {
+        return { valido: false, mensaje: "Por favor, complete todos los campos" };
     }
+    return { valido: true };
+};
 
-    //consumir api para el login por axios
+const guardarDatosUsuario = (id, rol) => {
+    localStorage.setItem("id_usuario", id);
+    localStorage.setItem("rol", rol);
+};
 
-    /*if ((username || password) == "") {
-            alert("Rellene todos los campos")
-            
-        }else{
-            
-            if (username === usuario_prueba.email && password === usuario_prueba.password) {
-    
-                messageDiv.textContent = '¡Inicio de sesión exitoso!';
-                messageDiv.className = 'mt-3 text-center text-success'; // Clase para texto verde
-                //alert("INICIO DE SESION EXITOSO \n BIENVENIDO  " + data_rol+" "+data_nombre);
-                window.location.href = "/pages/user/dashboard_agente.html"
-            
-    
-            } else {
-                messageDiv.textContent = 'Credenciales incorrectas. Inténtalo de nuevo.';
-                messageDiv.className = 'mt-3 text-center text-danger'; // Clase para texto rojo
-            }
-        }
+const redirigirUsuario = (rol) => {
+    const ruta = rol === "administrador" ? ROUTES.ADMIN : ROUTES.AGENTE;
+    window.location.href = ruta;
+};
+
+// Función principal de login
+const realizarLogin = async (username, password) => {
+    try {
+        const response = await axios.post(`${API_URL}/obtenerlogin`, {
+            correo: username,
+            contrasena: password
+        });
         
-        try { 
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.detail || "Error al intentar iniciar sesión");
+    }
+};
 
-            axios({
-                method: 'POST',
-                url: 'http://127.0.0.1:5000/login',
-    
-                data: {
-                    correo: username,
-                    contraseña: password,
-                }
-    
-            }).then(function (response) {
+// Evento principal
+document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.getElementById("login-form");
+    const messageDiv = document.getElementById("message");
 
-                const data_nombre = response.data[0].nombre;
-                const data_correo = response.data[0].correo;
-                const data_contraseña = response.data[0].contraseña;
-                const data_rol = response.data[0].rol;
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-                console.log(`nombre: ${data_nombre} \n correo: ${data_correo} \n contraseña: ${data_contraseña} \n rol: ${data_rol}`)
+        const usernameInput = document.getElementById("username").value;
+        const passwordInput = document.getElementById("password").value;
 
+        // Validación inicial
+        const validacion = validarCampos(usernameInput, passwordInput);
+        if (!validacion.valido) {
+            mostrarMensajeError(messageDiv, validacion.mensaje);
+            return;
+        }
 
-            });
-    
-            
-        }catch (error) {
-        console.log(error)
-        }*/
-  });
+        try {
+            const loginData = await realizarLogin(usernameInput, passwordInput);
+
+            if (loginData.correo === usernameInput && 
+                loginData.contrasena === passwordInput) {
+                
+                guardarDatosUsuario(loginData.id, loginData.rol);
+                redirigirUsuario(loginData.rol);
+            } else {
+                mostrarMensajeError(messageDiv, "Credenciales incorrectas");
+            }
+        } catch (error) {
+            console.error("Error en el login:", error);
+            mostrarMensajeError(messageDiv, error.message);
+        }
+    });
 });
 
 //funcion para el login de usuario

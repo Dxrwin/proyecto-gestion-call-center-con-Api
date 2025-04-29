@@ -9,6 +9,7 @@ const navLinks = document.querySelectorAll(
 );
 const sections = document.querySelectorAll(".dashboard-section");
 const sectionTitle = document.getElementById("section-title");
+const cerrar_sesion = document.getElementById("cerrar_sesion");
 
 /**
  * Initialize the dashboard
@@ -27,14 +28,25 @@ function initDashboard() {
 
   // Initialize the current section (default: profile)
   showSection("profile");
+  cerrar;
 
   // Marcar el enlace de perfil como activo
   document
     .querySelector('.nav-link[data-section="profile"]')
     .classList.add("active");
 
-  console.log("Dashboard initialized");
+  console.log("dashboard iniciado");
+  
+
+
 }
+
+//funcion cerrar sesion
+const cerrar = cerrar_sesion.addEventListener("click", () => {
+  localStorage.clear();
+  window.location.href = "/src/login.html";
+});
+
 
 /**
  * Set up navigation between dashboard sections

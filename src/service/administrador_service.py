@@ -22,6 +22,30 @@ def create_administrador(db:Session, administrador:AdministradorCreate):
     db.refresh(db_administrador)
     return db_administrador
 
+#obtener los datos del administrador
+def obtener_datos_administrador(db: Session, id_administrador: int):
+    try:
+        administrador = db.query(tables_model.Administrador).filter(tables_model.Administrador.id == id_administrador).first()
+        
+        if not administrador:
+            raise HTTPException(status_code=404, detail="Administrador no encontrado")
+            
+        return {
+            "id": administrador.id,
+            "nombre": administrador.nombre,
+            "apellido": administrador.apellido,
+            "correo": administrador.correo,
+            "telefono": administrador.telefono,
+            "rol": administrador.rol,
+            "imagen_perfil": administrador.imagen_perfil
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener datos del administrador: {str(e)}")
+
+
+
+
+
 
 #insertar administrador y login
 def insertar_administrador_y_login(db: Session, administrador: AdministradorCreate):
