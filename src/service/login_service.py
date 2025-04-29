@@ -12,6 +12,6 @@ def obtener_todos_registros_login(db:Session):
 def obtener_login_rol(db: Session, role: str):
     return db.query(tables_model.Login).filter(tables_model.Login.rol == role).first()
 
-#obtener login por correo por contraseña y rol
+#obtener login por correo por contraseña
 def obtener_login_correo_contrasena_rol(correo: str,contrasena: str,db: Session):
     return db.query(tables_model.Login).filter(tables_model.Login.correo == correo, tables_model.Login.contrasena == contrasena).first()
