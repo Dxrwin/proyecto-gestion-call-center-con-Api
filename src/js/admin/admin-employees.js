@@ -1,6 +1,28 @@
 /*
- * funcionalidad de empleados
-  gestion de empleados,crud, busqueda, filtros, paginacion 
+ * Módulo de Gestión de Empleados:
+ * Este módulo implementa un sistema completo de administración de empleados con las siguientes funcionalidades:
+ * 
+ * 1. Gestión de Datos:
+ *    - Almacenamiento y manipulación de información de empleados
+ *    - Operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+ *    - Validación de datos y manejo de errores
+ * 
+ * 2. Interfaz de Usuario:
+ *    - Tabla dinámica con paginación
+ *    - Formularios para agregar/editar empleados
+ *    - Modales de confirmación
+ *    - Sistema de notificaciones
+ * 
+ * 3. Funcionalidades Avanzadas:
+ *    - Búsqueda en tiempo real
+ *    - Filtrado por departamento y estado
+ *    - Selección múltiple de empleados
+ *    - Exportación de datos
+ * 
+ * 4. Optimizaciones:
+ *    - Carga perezosa de datos
+ *    - Actualización parcial de la interfaz
+ *    - Manejo eficiente del estado
  */
 
 // elementos del DOM
@@ -55,22 +77,22 @@ const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
 const testEmployees = [
   {
     id: 1,
-    firstName: "Juan",
-    lastName: "Pérez",
-    email: "juan.perez@example.com",
-    phone: "(555) 123-4567",
-    department: "Engineering",
-    position: "Senior Developer",
-    status: "Active",
-    hireDate: "2022-03-15",
-    address: "Calle Principal 123, Ciudad de México",
-    notes: "Desarrollador con 5 años de experiencia en React y Node.js.",
-    employeeId: "EMP-001",
-    birthDate: "1990-05-15",
-    emergencyContact: "María Pérez",
-    emergencyPhone: "(555) 987-6543",
-    skills: ["JavaScript", "React", "Node.js", "MongoDB", "AWS"],
-    performance: {
+    nombre: "Juan",
+    apellido: "Pérez",
+    correo: "juan.perez@example.com",
+    telefono: "3002548745",
+    Area: "Ventas",
+    posicion: "Senior Developer",
+    estado: "laburando",
+    fechaContrato: "2022-03-15",
+    direccion: "Calle Principal 123, Ciudad de México",
+    descripcion: "Desarrollador con 5 años de experiencia en React y Node.js.",
+    Id_empleado: "EMP-001",
+    fecha_nacimiento: "1990-05-15",
+    contactoEmergencia: "María Pérez",
+    telefono_emergencia: "3002548745",
+    habilidades: ["JavaScript", "React", "Node.js", "MongoDB", "AWS"],
+    rendimiento: {
       productivity: 92,
       quality: 95,
       teamwork: 88,
@@ -78,28 +100,28 @@ const testEmployees = [
   },
   {
     id: 2,
-    firstName: "Ana",
-    lastName: "García",
-    email: "ana.garcia@example.com",
-    phone: "(555) 234-5678",
-    department: "Marketing",
-    position: "Marketing Manager",
-    status: "Active",
-    hireDate: "2021-06-10",
-    address: "Av. Reforma 456, Ciudad de México",
-    notes: "Especialista en marketing digital y campañas en redes sociales.",
-    employeeId: "EMP-002",
-    birthDate: "1988-09-22",
-    emergencyContact: "Carlos García",
-    emergencyPhone: "(555) 876-5432",
-    skills: [
-      "Marketing Digital",
+    nombre: "Ana",
+    apellido: "García",
+    correo: "ana.garcia@example.com",
+    telefono: "3002548745",
+    Area: "publicidad",
+    posicion: "publicidad director",
+    estado: "laburando",
+    fechaContrato: "2021-06-10",
+    direccion: "Av. Reforma 456, Ciudad de México",
+    descripcion: "Especialista en publicidad digital y campañas en redes sociales.",
+    Id_empleado: "EMP-002",
+    fecha_nacimiento: "1988-09-22",
+    contactoEmergencia: "Carlos García",
+    telefono_emergencia: "3002548745",
+    habilidades: [
+      "publicidad Digital",
       "SEO",
       "Redes Sociales",
       "Google Analytics",
-      "Content Marketing",
+      "Content publicidad",
     ],
-    performance: {
+    rendimiento: {
       productivity: 90,
       quality: 88,
       teamwork: 95,
@@ -107,29 +129,29 @@ const testEmployees = [
   },
   {
     id: 3,
-    firstName: "Carlos",
-    lastName: "Rodríguez",
-    email: "carlos.rodriguez@example.com",
-    phone: "(555) 345-6789",
-    department: "Sales",
-    position: "Sales Representative",
-    status: "On Leave",
-    hireDate: "2023-01-05",
-    address: "Calle Juárez 789, Guadalajara",
-    notes:
+    nombre: "Carlos",
+    apellido: "Rodríguez",
+    correo: "carlos.rodriguez@example.com",
+    telefono: "3002548745",
+    Area: "Sales",
+    posicion: "Sales Representative",
+    estado: "descansando",
+    fechaContrato: "2023-01-05",
+    direccion: "Calle Juárez 789, Guadalajara",
+    descripcion:
       "En permiso parental hasta junio 2023. Excelente historial de ventas.",
-    employeeId: "EMP-003",
-    birthDate: "1985-11-30",
-    emergencyContact: "Laura Rodríguez",
-    emergencyPhone: "(555) 765-4321",
-    skills: [
+    Id_empleado: "EMP-003",
+    fecha_nacimiento: "1985-11-30",
+    contactoEmergencia: "Laura Rodríguez",
+    telefono_emergencia: "3002548745",
+    habilidades: [
       "Ventas",
       "Negociación",
       "CRM",
       "Presentaciones",
       "Atención al Cliente",
     ],
-    performance: {
+    rendimiento: {
       productivity: 85,
       quality: 82,
       teamwork: 90,
@@ -137,27 +159,27 @@ const testEmployees = [
   },
   {
     id: 4,
-    firstName: "Laura",
-    lastName: "Martínez",
-    email: "laura.martinez@example.com",
-    phone: "(555) 456-7890",
-    department: "HR",
-    position: "HR Specialist",
-    status: "Active",
-    hireDate: "2022-09-20",
-    address: "Av. Insurgentes 321, Ciudad de México",
-    notes: "Especialista en reclutamiento y desarrollo organizacional.",
-    employeeId: "EMP-004",
-    birthDate: "1992-03-18",
-    emergencyContact: "Roberto Martínez",
-    emergencyPhone: "(555) 654-3210",
-    skills: [
+    nombre: "Laura",
+    apellido: "Martínez",
+    correo: "laura.martinez@example.com",
+    telefono: "3002548745",
+    Area: "HR",
+    posicion: "HR Specialist",
+    estado: "laburando",
+    fechaContrato: "2022-09-20",
+    direccion: "Av. Insurgentes 321, Ciudad de México",
+    descripcion: "Especialista en reclutamiento y desarrollo organizacional.",
+    Id_empleado: "EMP-004",
+    fecha_nacimiento: "1992-03-18",
+    contactoEmergencia: "Roberto Martínez",
+    telefono_emergencia: "3002548745",
+    habilidades: [
       "Reclutamiento",
       "Selección de Personal",
       "Desarrollo Organizacional",
       "Gestión de Conflictos",
     ],
-    performance: {
+    rendimiento: {
       productivity: 88,
       quality: 90,
       teamwork: 92,
@@ -165,28 +187,28 @@ const testEmployees = [
   },
   {
     id: 5,
-    firstName: "Roberto",
-    lastName: "López",
-    email: "roberto.lopez@example.com",
-    phone: "(555) 567-8901",
-    department: "Finance",
-    position: "Financial Analyst",
-    status: "Inactive",
-    hireDate: "2021-11-15",
-    address: "Calle Hidalgo 654, Monterrey",
-    notes:
+    nombre: "Roberto",
+    apellido: "López",
+    correo: "roberto.lopez@example.com",
+    telefono: "3002548745",
+    Area: "Finance",
+    posicion: "Financial Analyst",
+    estado: "esperando ingreso",
+    fechaContrato: "2021-11-15",
+    direccion: "Calle Hidalgo 654, Monterrey",
+    descripcion:
       "Contrato finalizado el 31/03/2023. Excelente en análisis financiero.",
-    employeeId: "EMP-005",
-    birthDate: "1987-07-12",
-    emergencyContact: "Sofía López",
-    emergencyPhone: "(555) 543-2109",
-    skills: [
+    Id_empleado: "EMP-005",
+    fecha_nacimiento: "1987-07-12",
+    contactoEmergencia: "Sofía López",
+    telefono_emergencia: "3002548745",
+    habilidades: [
       "Análisis Financiero",
       "Excel Avanzado",
       "Presupuestos",
       "Proyecciones Financieras",
     ],
-    performance: {
+    rendimiento: {
       productivity: 91,
       quality: 87,
       teamwork: 75,
@@ -194,28 +216,28 @@ const testEmployees = [
   },
   {
     id: 6,
-    firstName: "Sofía",
-    lastName: "Hernández",
-    email: "sofia.hernandez@example.com",
-    phone: "(555) 678-9012",
-    department: "Engineering",
-    position: "QA Engineer",
-    status: "Active",
-    hireDate: "2022-05-10",
-    address: "Av. Universidad 789, Ciudad de México",
-    notes: "Especialista en pruebas automatizadas y control de calidad.",
-    employeeId: "EMP-006",
-    birthDate: "1991-12-05",
-    emergencyContact: "Miguel Hernández",
-    emergencyPhone: "(555) 432-1098",
-    skills: [
+    nombre: "Sofía",
+    apellido: "Hernández",
+    correo: "sofia.hernandez@example.com",
+    telefono: "3002548745",
+    Area: "Ventas",
+    posicion: "QA Engineer",
+    estado: "Active",
+    fechaContrato: "2022-05-10",
+    direccion: "Av. Universidad 789, Ciudad de México",
+    descripcion: "Especialista en pruebas automatizadas y control de calidad.",
+    Id_empleado: "EMP-006",
+    fecha_nacimiento: "1991-12-05",
+    contactoEmergencia: "Miguel Hernández",
+    telefono_emergencia: "(555) 432-1098",
+    habilidades: [
       "Pruebas Automatizadas",
       "Selenium",
       "JIRA",
       "Gestión de Calidad",
       "Scrum",
     ],
-    performance: {
+    rendimiento: {
       productivity: 86,
       quality: 94,
       teamwork: 88,
@@ -227,7 +249,7 @@ const testEmployees = [
 const employeesState = {
   //array de empleados
   employees: [],
-  //array de empleados filtrados
+  //array de empleados filtrados o los que se muestran en la tabla
   filteredEmployees: [],
   //array de empleados seleccionados
   selectedEmployees: [],
@@ -236,11 +258,11 @@ const employeesState = {
   //booleano para saber si se esta editando un empleado o no
   isEditing: false,
 
-  //filtros de empleados, busqueda, departamento y estado
+  //filtros de empleados, busqueda, posicion/perfil y estado
   filters: {
     search: "",
-    department: "",
-    status: "",
+    posicion: "",
+    estado: "",
   },
   //paginacion de empleados, pagina actual, total de paginas y items por pagina
   pagination: {
@@ -251,7 +273,12 @@ const employeesState = {
 };
 
 /**
- * Inicializar la funcionalidad de empleados
+ * Inicialización del Módulo de Empleados:
+ * Configura todos los elementos necesarios para el funcionamiento del sistema:
+ * - Vincula eventos a los elementos del DOM
+ * - Inicializa el estado global
+ * - Carga los datos iniciales
+ * - Configura los manejadores de eventos
  */
 function initEmployees() {
   //crand las funciones de los eventos
@@ -272,37 +299,99 @@ function initEmployees() {
   //agregando la funcion de al hacer clicl en obtener todos los empleados en las opciones del filtro traera todos los empleados
   selectAllEmployees.addEventListener("change", handleSelectAll);
   //agregando la funcion al seleccionar el boton eliminar empleado, al hacer click en el boton de eliminar empleado mostrar el modal de confirmacion de eliminacion
-  deleteSelectedBtn.addEventListener("click", showDeleteConfirmation);
+  deleteSelectedBtn.addEventListener("click", exportarReportePdf);
   //agregando la funcion al boton para eliminar el empleado
-  confirmDeleteBtn.addEventListener("click", deleteSelectedEmployees);
+  //confirmDeleteBtn.addEventListener("click", exportarReportePdf);
 
   // Cargar datos de los empleados
   loadEmployees();
 }
 
-//Cargar datos de empleados
+/**
+ * Carga de Datos de Empleados:
+ * - Muestra un indicador de carga mientras se obtienen los datos
+ * - Realiza la petición a la API o carga datos de prueba
+ * - Actualiza el estado global con los datos recibidos
+ * - Inicializa los filtros y la paginación
+ * - Actualiza la interfaz de usuario
+ */
 function loadEmployees() {
   // Mostrar un estado de carga mientras se obtienen los datos
   employeesTableBody.innerHTML =
     '<tr><td colspan="8" class="text-center"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando empleados...</td></tr>';
 
-  // Simular una llamada a la API con un pequeño retraso
-  setTimeout(() => {
-    //aqui se podria hacer una solicitud a la API para obtener los empleados
+  // Configuración de la petición a la API
+  const apiConfig = {
+    method: 'GET',
+    url: 'http://127.0.0.1:8000/empleado', // URL de la API
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}` // Token de autenticación
+    }
+  };
 
-    // Actualizar el estado con los datos de prueba
-    employeesState.employees = testEmployees;
-
-    // Filtrar los empleados inicialmente
-    employeesState.filteredEmployees = [...testEmployees];
-
-    // Actualizar la tabla de empleados
-    updateEmployeesTable();
-  }, 500);
+  // Realizar la petición a la API usando Axios
+  axios(apiConfig)
+    .then(response => {
+      console.log("datos de los empleados obtenidos en la api = \n =",response.data)
+      // Verificar si la respuesta es exitosa
+      if (response.status === 200) {
+        // Actualizar el estado con los datos recibidos
+        employeesState.employees = response.data;
+        console.log("datos añadidos al esatdo global de empleados =",employeesState.employees)
+        
+        // Filtrar los empleados inicialmente
+        employeesState.filteredEmployees = [...response.data];
+        
+        // Actualizar la tabla de empleados
+        updateEmployeesTable();
+        
+        // Mostrar notificación de éxito
+        showNotification('Datos de empleados cargados exitosamente', 'success');
+      } else {
+        throw new Error('Error en la respuesta del servidor');
+      }
+    })
+    .catch(error => {
+      console.error('Error al cargar empleados:', error);
+      
+      // Mostrar mensaje de error en la tabla
+      employeesTableBody.innerHTML = `
+        <tr>
+          <td colspan="8" class="text-center text-danger">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            Error al cargar los empleados. Por favor, intente nuevamente.
+          </td>
+        </tr>
+      `;
+      
+      // Mostrar notificación de error
+      showNotification('Error al cargar los empleados', 'error');
+      
+      // En caso de error, cargar datos de prueba como respaldo
+      console.log('Cargando datos de prueba como respaldo...');
+      employeesState.employees = testEmployees;
+      employeesState.filteredEmployees = [...testEmployees];
+      updateEmployeesTable();
+    })
+    .finally(() => {
+      // Ocultar el spinner de carga
+      const spinner = document.querySelector('.spinner-border');
+      if (spinner) {
+        spinner.remove();
+      }
+    });
 }
 
-// Actualizar la tabla de empleados con el estado actual,agregando los atributos de cada fila
-//generando dinamicamente los empleados con cada bton y sus funciones
+/**
+ * Actualización de la Tabla de Empleados:
+ * - Calcula los índices de paginación
+ * - Filtra los empleados según los criterios actuales
+ * - Genera el HTML dinámico para cada fila
+ * - Actualiza los controles de paginación
+ * - Vincula eventos a los elementos recién creados
+ * - Maneja la selección múltiple de empleados
+ */
 function updateEmployeesTable() {
   //calcula los indices de paginacion para obtener los empleados visibles
   //obtener la pagina actual y el total de items por pagina
@@ -313,16 +402,25 @@ function updateEmployeesTable() {
 
   //obtener la ultima pagina y el total de items por pagina
   const endIndex = startIndex + employeesState.pagination.itemsPerPage;
-  //de los empleados filtrados, obtener los empleados visibles
-  //slice devuelve una copia superficial de una porcion del array, desde el indice de inicio hasta el indice de fin
+  
+  // De la lista de empleados que han sido filtrados según los criterios actuales (como búsqueda, departamento, estado, etc.),
+  // obtenemos un subconjunto de empleados que serán visibles en la tabla de acuerdo con la paginación actual.
+  // Utilizamos el método slice para crear una copia superficial de una porción del array de empleados filtrados.
+  // Este método toma dos argumentos: el índice de inicio y el índice de fin, y devuelve los elementos comprendidos entre estos índices.
+  // Esto nos permite mostrar solo los empleados correspondientes a la página actual, mejorando así la eficiencia y la experiencia del usuario.
   const paginatedEmployees = employeesState.filteredEmployees.slice(
     startIndex,
     endIndex
   );
 
   // Actualizar el total de páginas
-  //el metodo math.ceil devuelve el entero mayor o igual al resultado de la division
-  //calcular el total de paginas dividiendo el total de empleados filtrados entre el total de items por pagina
+  // El método Math.ceil se utiliza para redondear hacia arriba al número entero más cercano,
+  // asegurando que cualquier fracción de página adicional se cuente como una página completa.
+  // Esto es crucial para la paginación, ya que garantiza que todos los empleados filtrados
+  // se distribuyan adecuadamente en las páginas disponibles.
+  // Calculamos el total de páginas dividiendo el número total de empleados filtrados
+  // por el número de elementos que se muestran por página, lo que nos permite determinar
+  // cuántas páginas completas se necesitan para mostrar todos los empleados.
   employeesState.pagination.totalPages = Math.ceil(
     employeesState.filteredEmployees.length /
       employeesState.pagination.itemsPerPage
@@ -365,23 +463,18 @@ function updateEmployeesTable() {
         </td>
         <td>
           <div class="d-flex align-items-center">
-            <img src="/src/assets/img/avatarimage.png" alt="${
-              employee.firstName
-            } ${employee.lastName}" class="employee-avatar me-2">
+            <img src="/src/assets/img/${employee.imagen_perfil}" alt="${employee.imagen_perfil} ${employee.apellido}" class="employee-avatar me-2">
             <div>
-              <div class="employee-name">${employee.firstName} ${
-      employee.lastName
-    }</div>
-              <div class="employee-position">${employee.position}</div>
+              <div class="employee-name">${employee.nombre} ${employee.apellido}</div>
+              <div class="employee-position">${employee.posicion}</div>
             </div>
           </div>
         </td>
-        <td>${employee.email}</td>
-        <td>${employee.department}</td>
-        <td>${employee.position}</td>
+        <td>${employee.correo}</td>
+        <td>${employee.rol}</td>
+        <td>${employee.posicion}</td>
         <td>
-          <span class="status-badge ${getStatusClass(employee.status)}">
-            ${employee.status}
+          <span class="status-badge ${getStatusClass(testEmployees[employee.id-1].estado)}">${testEmployees[employee.id-1].estado}
           </span>
         </td>
         <td>
@@ -407,16 +500,6 @@ function updateEmployeesTable() {
     `;
   });
 
-  console.log(
-    "datos de los empleados en la tabla empleados =",
-    paginatedEmployees,
-    "\n",
-    "nombre de empleados =",
-    employeesState.employees[0].firstName,
-    "\n",
-    "id_employes de cada empleado =",
-    employeesState.employees[0].employeeId
-  );
 
   //cada fila iterada se agrega a la tabla de empleados
   //el innerHTML es una propiedad que establece o obtiene el contenido HTML de un elemento
@@ -486,15 +569,12 @@ function updateEmployeesTable() {
 }
 
 /**
- * Ver detalles del empleado
- * @param {number} employeeId - El ID del empleado a ver, este id se obtiene de testEmployees
+ * Visualización de Detalles del Empleado:
+ * - Busca el empleado por ID en el estado global
+ * - Almacena los datos en localStorage para persistencia
+ * - Redirige a la página de detalles
+ * - Maneja casos de error y empleados no encontrados
  */
-
-// Mostrar los detalles del empleado en una nueva página
-//se le pasa el id del empleado a la funcion viewEmployeeDetails
-// Actualizar los controles de paginación dinámicamente según el estado actual
-// Generar botones "Anterior", "Siguiente" y números de página
-// Agregar eventos para manejar el cambio de página
 function viewEmployeeDetails(employeeId) {
   //para encontrar el empleado se usa el metodo find que devuelve el primer elemento que cumple con la condicion
   //el id del empleado se obtiene de la variable employeeId
@@ -510,13 +590,21 @@ function viewEmployeeDetails(employeeId) {
   //redirige a la pagina de detalles del empleado
 
   // Guardar los datos del empleado en localStorage para la página de detalles
-  localStorage.setItem("selectedEmployee", JSON.stringify(employee));
+  localStorage.setItem("id_empleado_detalle", JSON.stringify(employee.id));
+  localStorage.setItem("nombre_empleado_seleccionado", JSON.stringify(employee.nombre));
 
   // Redirigir a la página de detalles del empleado
   window.location.href = "detalles-usuario.html";
 }
 
-//Actualizar los controles de paginación
+/**
+ * Gestión de Paginación:
+ * - Calcula el número total de páginas
+ * - Genera los controles de navegación
+ * - Maneja los eventos de cambio de página
+ * - Actualiza la visualización de la página actual
+ * - Deshabilita botones cuando es necesario
+ */
 function updatePagination() {
   // Obtener el elemento Html que controla la paginación
   const pagination = document.querySelector(".pagination");
@@ -592,20 +680,19 @@ function updatePagination() {
 }
 
 /**
- * Obtener la clase CSS para el estado del empleado
- * @param {string} status - El estado del empleado
- * @returns {string} - Clase CSS
+ * Clasificación de Estados:
+ * - Asigna clases CSS según el estado del empleado
+ * - Maneja diferentes estados: Activo, Inactivo, En Permiso
+ * - Proporciona estilos visuales consistentes
+ * - Facilita la identificación visual del estado
  */
-
-//la funcion recibe el estado del empleado creado dinamicamente y devuelve la clase css correspondiente al estado del empleado
-//la clase css se usa para cambiar el color del texto del estado del empleado y estilizar el estado en la tabla
 function getStatusClass(status) {
   switch (status) {
-    case "Active":
+    case "laburando":
       return "status-active";
-    case "Inactive":
+    case "esperando ingreso":
       return "status-inactive";
-    case "On Leave":
+    case "descansando":
       return "status-leave";
     default:
       return "";
@@ -613,18 +700,13 @@ function getStatusClass(status) {
 }
 
 /**
- * Mostrar el modal para agregar un empleado
+ * Gestión del Modal de Agregar Empleado:
+ * - Limpia y resetea el formulario
+ * - Establece valores predeterminados
+ * - Actualiza el título y estado del modal
+ * - Prepara el formulario para nuevo ingreso
+ * - Maneja la visualización del modal
  */
-
-/**
- * Mostrar el modal para agregar un empleado
- * - Limpia el formulario.
- * - Establece la fecha actual como predeterminada.
- * - Cambia el título del modal a "Agregar Empleado".
- * - Actualiza el estado global para indicar que no se está editando.
- * - Muestra el modal en la pantalla.
- */
-
 function showAddEmployeeModal() {
   // Resetear el formulario o limpiar los campos
   employeeForm.reset();
@@ -648,10 +730,13 @@ function showAddEmployeeModal() {
 }
 
 /**
- * Editar un empleado
- * @param {number} employeeId - El ID del empleado a editar
+ * Edición de Empleado:
+ * - Busca el empleado por ID
+ * - Carga los datos en el formulario
+ * - Actualiza el estado de edición
+ * - Configura el modal para edición
+ * - Maneja errores de empleado no encontrado
  */
-
 function editEmployee(employeeId) {
   // Encontrar el empleado usando el metodo find del array employees
   //se usa la funcion que si el id coincida con el employeeId
@@ -671,16 +756,18 @@ function editEmployee(employeeId) {
 
   // Llenar el formulario con los datos del empleado encontrado
   //de esta manera se visualizan los datos del empleado en el modal para ser editados
-  document.getElementById("emp-first-name").value = employee.firstName;
-  document.getElementById("emp-last-name").value = employee.lastName;
-  document.getElementById("emp-email").value = employee.email;
-  document.getElementById("emp-phone").value = employee.phone;
-  document.getElementById("emp-department").value = employee.department;
-  document.getElementById("emp-position").value = employee.position;
-  document.getElementById("emp-hire-date").value = employee.hireDate;
-  document.getElementById("emp-status").value = employee.status;
-  document.getElementById("emp-address").value = employee.address;
-  document.getElementById("emp-notes").value = employee.notes;
+  document.getElementById("emp-first-name").value = employee.nombre;
+  document.getElementById("emp-last-name").value = employee.apellido;
+  document.getElementById("emp-email").value = employee.correo;
+  document.getElementById("emp-phone").value = employee.telefono;
+  document.getElementById("emp-department").value = employee.posicion;
+  document.getElementById("emp-position").value = employee.posicion;
+  document.getElementById("emp-hire-date").value = employee.fecha_contratacion;
+  document.getElementById("emp-status").value = employee.estado;
+  document.getElementById("emp-address").value = employee.fecha_nacimiento;
+  document.getElementById("emp-notes").value = employee.habilidades;
+
+  //agregar api para actualizar
 
   // Actualizar el título del modal
   document.getElementById("employee-modal-label").textContent =
@@ -692,7 +779,13 @@ function editEmployee(employeeId) {
 }
 
 /**
- * Guardar un empleado (crear o actualizar)
+ * Guardado de Empleado:
+ * - Valida los datos del formulario
+ * - Prepara los datos para guardar
+ * - Decide entre crear o actualizar
+ * - Maneja la respuesta del servidor
+ * - Actualiza la interfaz de usuario
+ * - Muestra notificaciones de éxito/error
  */
 function saveEmployee() {
   //antes de guardar el empleado se valida el formulario usando checkvalidity
@@ -733,10 +826,13 @@ function saveEmployee() {
 }
 
 /**
- * Crear un nuevo empleado
- * @param {Object} employeeData - Los datos del empleado
+ * Creación de Nuevo Empleado:
+ * - Genera ID único
+ * - Establece valores predeterminados
+ * - Agrega al estado global
+ * - Actualiza la interfaz
+ * - Maneja la respuesta del servidor
  */
-
 function createEmployee(employeeData) {
   // Crear un nuevo objeto de empleado
   const newEmployee = {
@@ -773,16 +869,18 @@ function createEmployee(employeeData) {
 }
 
 /**
- * Actualizar un empleado existente
- * @param {number} employeeId - El ID del empleado a actualizar
- * @param {Object} employeeData - Los datos actualizados del empleado
+ * Actualización de Empleado Existente:
+ * - Busca el empleado por ID
+ * - Actualiza los datos
+ * - Mantiene datos históricos
+ * - Actualiza la interfaz
+ * - Maneja errores de actualización
  */
-
 function updateEmployee(employeeId, employeeData) {
   console.log("entrando al modal e inicializando la funcion editar empleado");
 
   console.log(
-    "funcion actualizar Empleado \n idempleado obtenido = ",
+    "funcion actualizar Empleado \n id_empleado obtenido = ",
     employeeId,
     " \n datos del empleado por el id = ",
     employeesState.employees[employeeId - 1],
@@ -816,8 +914,12 @@ function updateEmployee(employeeId, employeeData) {
 }
 
 /**
- * Mostrar el modal de confirmación de eliminación
- * @param {Array} employeeIds - Array de IDs de empleados a eliminar (opcional)
+ * Confirmación de Eliminación:
+ * - Valida empleados seleccionados
+ * - Muestra mensaje personalizado
+ * - Maneja eliminación individual/grupal
+ * - Actualiza el estado global
+ * - Muestra confirmación visual
  */
 function showDeleteConfirmation(employeeIds) {
   // Si se proporcionan employeeIds, usarlos; de lo contrario, usar los empleados seleccionados
@@ -834,11 +936,8 @@ function showDeleteConfirmation(employeeIds) {
     const employee = employeesState.employees.find(
       (emp) => emp.id === idsToDelete[0]
     );
-    confirmationMessage = `¿Está seguro que desea eliminar al empleado "${employee.firstName} ${employee.lastName}"? Esta acción no se puede deshacer.`;
-  } else {
-    confirmationMessage = `¿Está seguro que desea eliminar ${idsToDelete.length} empleados seleccionados? Esta acción no se puede deshacer.`;
+    confirmationMessage = `¿Está seguro que desea eliminar al empleado "${employee.nombre} ${employee.apellido}"? Esta acción no se puede deshacer.`;
   }
-
   document.getElementById("delete-confirmation-content").textContent =
     confirmationMessage;
 
@@ -850,7 +949,12 @@ function showDeleteConfirmation(employeeIds) {
 }
 
 /**
- * Eliminar los empleados seleccionados
+ * Eliminación de Empleados:
+ * - Elimina empleados seleccionados
+ * - Actualiza el estado global
+ * - Limpia selecciones
+ * - Actualiza la interfaz
+ * - Muestra notificación de éxito
  */
 function deleteSelectedEmployees() {
   if (employeesState.selectedEmployees.length === 0) {
@@ -879,9 +983,12 @@ function deleteSelectedEmployees() {
 }
 
 /**
- * Manejar la selección de un empleado
- * @param {number} employeeId - El ID del empleado
- * @param {boolean} isSelected - Si el empleado está seleccionado
+ * Gestión de Selección de Empleados:
+ * - Maneja selección individual
+ * - Actualiza estado de selección
+ * - Mantiene sincronización UI
+ * - Actualiza botones de acción
+ * - Maneja selección múltiple
  */
 function handleEmployeeSelection(employeeId, isSelected) {
   if (isSelected) {
@@ -914,7 +1021,12 @@ function handleEmployeeSelection(employeeId, isSelected) {
 }
 
 /**
- * Manejar el cambio del checkbox de seleccionar todos
+ * Selección Global de Empleados:
+ * - Maneja selección/deselección total
+ * - Actualiza todos los checkboxes
+ * - Sincroniza estado global
+ * - Actualiza botones de acción
+ * - Maneja estados intermedios
  */
 function handleSelectAll() {
   const isChecked = selectAllEmployees.checked;
@@ -949,7 +1061,11 @@ function handleSelectAll() {
 }
 
 /**
- * Actualizar el estado del checkbox de seleccionar todos
+ * Actualización de Checkbox Global:
+ * - Calcula estado de selección
+ * - Maneja estados indeterminados
+ * - Actualiza visualización
+ * - Sincroniza con selecciones
  */
 function updateSelectAllCheckbox() {
   const visibleEmployeeIds = employeesState.filteredEmployees.map(
@@ -967,65 +1083,116 @@ function updateSelectAllCheckbox() {
 }
 
 /**
- * Actualizar el estado del botón de eliminar seleccionados
+ * Actualización de Botón Exportar PDF:
+ * - Habilita/deshabilita según la existencia de empleados
+ * - Actualiza estado visual del botón
+ * - Maneja casos de tabla vacía
  */
 function updateDeleteSelectedButton() {
-  deleteSelectedBtn.disabled = employeesState.selectedEmployees.length === 0;
+  // Verificar si hay empleados en la tabla filtrada
+  const hasEmployees = employeesState.filteredEmployees.length > 0;
+  
+  // Habilitar o deshabilitar el botón según la existencia de empleados
+  deleteSelectedBtn.disabled = !hasEmployees;
+  
+  // Actualizar el texto del botón según su estado
+  if (hasEmployees) {
+    deleteSelectedBtn.innerHTML = '<i class="fas fa-file-pdf me-2"></i>Exportar PDF';
+    deleteSelectedBtn.classList.remove('btn-danger');
+    deleteSelectedBtn.classList.add('btn-success');
+  } else {
+    deleteSelectedBtn.innerHTML = '<i class="fas fa-file-pdf me-2"></i>Sin datos para exportar';
+    deleteSelectedBtn.classList.remove('btn-success');
+    deleteSelectedBtn.classList.add('btn-danger');
+  }
 }
 
 /**
- * Manejar la entrada de búsqueda
+ * Manejo de Búsqueda:
+ * - Procesa entrada en tiempo real
+ * - Normaliza texto de búsqueda
+ * - Actualiza filtros globales
+ * - Prepara para filtrado
  */
 function handleSearchInput() {
   employeesState.filters.search = employeeSearch.value.trim().toLowerCase();
 }
 
 /**
- * Aplicar filtros a los empleados
+ * Aplicación de Filtros:
+ * Esta función se encarga de filtrar los empleados según los criterios seleccionados
+ * y actualizar la visualización de la tabla. Combina múltiples filtros y maneja
+ * la paginación de los resultados.
+ * 
+ * Flujo de la función:
+ * 1. Actualiza los valores de los filtros desde los inputs
+ * 2. Aplica los filtros a la lista de empleados
+ * 3. Actualiza la paginación
+ * 4. Refresca la tabla con los resultados filtrados
  */
 function applyFilters() {
-  // Actualizar los valores de filtro desde las entradas
+  // 1. ACTUALIZACIÓN DE VALORES DE FILTROS
+  // Obtener y normalizar los valores de los filtros desde los elementos del DOM
   employeesState.filters.search = employeeSearch.value.trim().toLowerCase();
-  employeesState.filters.department = departmentFilter.value;
-  employeesState.filters.status = statusFilter.value;
+  employeesState.filters.posicion = departmentFilter.value;
+  employeesState.filters.estado = statusFilter.value;
 
-  const { search, department, status } = employeesState.filters;
+  // Desestructurar los filtros para facilitar su uso
+  const { search, posicion, estado } = employeesState.filters;
 
-  // Filtrar empleados
-  employeesState.filteredEmployees = employeesState.employees.filter(
-    (employee) => {
-      // Filtro de búsqueda
-      const searchMatch =
-        !search ||
-        employee.firstName.toLowerCase().includes(search) ||
-        employee.lastName.toLowerCase().includes(search) ||
-        employee.email.toLowerCase().includes(search) ||
-        employee.position.toLowerCase().includes(search);
+  // 2. APLICACIÓN DE FILTROS
+  // Filtrar los empleados según los criterios seleccionados
+  employeesState.filteredEmployees = employeesState.employees.filter((employee) => {
+    // 2.1 FILTRO DE BÚSQUEDA
+    // Busca coincidencias en múltiples campos del empleado
+    const searchMatch =
+      !search || // Si no hay término de búsqueda, incluir todos
+      employee.nombre.toLowerCase().includes(search) || // Buscar en nombre
+      employee.apellido.toLowerCase().includes(search) || // Buscar en apellido
+      employee.correo.toLowerCase().includes(search) || // Buscar en correo
+      employee.posicion.toLowerCase().includes(search); // Buscar en posición
 
-      // Filtro de departamento
-      const departmentMatch = !department || employee.department === department;
+    // 2.2 FILTRO DE POSICIÓN/PERFIL
+    // Verifica si el empleado coincide con la posición seleccionada
+    const positionMatch = !posicion || employee.posicion === posicion;
 
-      // Filtro de estado
-      const statusMatch = !status || employee.status === status;
+    // 2.3 FILTRO DE ESTADO
+    // Verifica si el empleado coincide con el estado seleccionado
+    const statusMatch = !estado || employee.estado === estado;
 
-      return searchMatch && departmentMatch && statusMatch;
-    }
-  );
+    // 2.4 COMBINACIÓN DE FILTROS
+    // El empleado se incluye en los resultados solo si cumple con TODOS los filtros
+    return searchMatch && positionMatch && statusMatch;
+  });
 
-  // Resetear a la primera página
+  // 3. ACTUALIZACIÓN DE PAGINACIÓN
+  // Resetear a la primera página para evitar problemas de navegación
   employeesState.pagination.currentPage = 1;
 
-  // Actualizar la tabla
+  // 4. ACTUALIZACIÓN DE LA INTERFAZ
+  // Actualizar la tabla con los empleados filtrados
   updateEmployeesTable();
 
-  // Actualizar el checkbox de seleccionar todos
+  // Actualizar el estado del checkbox de seleccionar todos
   updateSelectAllCheckbox();
+
+  // 5. REGISTRO Y MONITOREO (opcional, para debugging)
+  console.log('Filtros aplicados:', {
+    búsqueda: search,
+    posición: posicion,
+    estado: estado,
+    totalEmpleados: employeesState.employees.length,
+    empleadosFiltrados: employeesState.filteredEmployees.length
+  });
 }
 
 /**
- * Mostrar un mensaje de notificación
- * @param {string} message - El mensaje a mostrar
- * @param {string} type - El tipo de notificación (success, error, info, warning)
+ * Sistema de Notificaciones:
+ * - Muestra mensajes temporales
+ * - Soporta múltiples tipos
+ * - Auto-eliminación
+ * - Posicionamiento fijo
+ * - Estilos contextuales
  */
 function showNotification(message, type) {
   // Crear el elemento de notificación
@@ -1049,5 +1216,106 @@ function showNotification(message, type) {
   }, 5000);
 }
 
-// Inicializar la funcionalidad de empleados cuando el DOM esté completamente cargado
+/**
+ * Exportación de Reporte PDF:
+ * - Genera un PDF con los datos actuales de la tabla
+ * - Incluye los filtros aplicados
+ * - Formatea los datos para mejor presentación
+ * - Agrega encabezados y estilos
+ * - Maneja la descarga del archivo
+ */
+function exportarReportePdf() {
+  // Crear una nueva instancia de jsPDF
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Configurar el título del documento
+  const title = "Reporte de Empleados";
+  const fecha = new Date().toLocaleDateString();
+  
+  // Agregar título y fecha
+  doc.setFontSize(16);
+  doc.text(title, 14, 15);
+  doc.setFontSize(10);
+  doc.text(`Fecha: ${fecha}`, 14, 22);
+
+  // Agregar información de filtros si existen
+  let filtrosInfo = "Filtros aplicados: ";
+  if (employeesState.filters.search) {
+    filtrosInfo += `Búsqueda: "${employeesState.filters.search}" `;
+  }
+  if (employeesState.filters.posicion) {
+    filtrosInfo += `posicion: "${employeesState.filters.posicion}" `;
+  }
+  if (employeesState.filters.estado) {
+    filtrosInfo += `Estado: "${employeesState.filters.estado}" `;
+  }
+  
+  if (filtrosInfo !== "Filtros aplicados: ") {
+    doc.setFontSize(8);
+    doc.text(filtrosInfo, 14, 30);
+  }
+
+  // Preparar los datos para la tabla
+  const tableData = employeesState.filteredEmployees.map(employee => [
+    employee.nombre + " " + employee.apellido,
+    employee.correo,
+    employee.rol,
+    employee.posicion,
+    employee.estado
+  ]);
+
+  // Configurar las columnas de la tabla
+  const tableColumns = [
+    { header: 'Nombre', dataKey: 'nombre' },
+    { header: 'Correo', dataKey: 'correo' },
+    { header: 'Rol', dataKey: 'rol' },
+    { header: 'Posición', dataKey: 'posicion' },
+    { header: 'Estado', dataKey: 'estado' }
+  ];
+
+  // Configurar opciones de la tabla
+  const tableOptions = {
+    startY: 35,
+    head: [['Nombre', 'Correo', 'Rol', 'Posición', 'Estado']],
+    body: tableData,
+    theme: 'grid',
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+      fontSize: 10,
+      fontStyle: 'bold'
+    },
+    bodyStyles: {
+      fontSize: 9
+    },
+    alternateRowStyles: {
+      fillColor: [245, 245, 245]
+    },
+    margin: { top: 35 }
+  };
+
+  // Agregar la tabla al documento
+  doc.autoTable(tableOptions);
+
+  // Agregar pie de página con el total de registros
+  const finalY = doc.lastAutoTable.finalY || 35;
+  doc.setFontSize(8);
+  doc.text(
+    `Total de registros: ${employeesState.filteredEmployees.length}`,
+    14,
+    finalY + 10
+  );
+
+  // Generar el nombre del archivo
+  const fileName = `Reporte_Empleados_${fecha.replace(/\//g, '-')}.pdf`;
+
+  // Guardar el PDF
+  doc.save(fileName);
+
+  // Mostrar notificación de éxito
+  showNotification('Reporte PDF generado exitosamente', 'success');
+}
+
+// Inicialización del módulo cuando el DOM está listo
 document.addEventListener("DOMContentLoaded", initEmployees);

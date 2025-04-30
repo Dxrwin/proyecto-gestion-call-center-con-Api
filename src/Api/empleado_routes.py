@@ -44,3 +44,11 @@ def insertar_empleado_y_login(empleado: EmpleadoCreate, db: Session = Depends(ge
 def obtenerEmpleados(db: Session = Depends(get_db)):
     empleados = empleado_service.get_empleados(db)
     return empleados
+
+@router.get("/empleado/{empleado_id}", response_model=EmpleadoOut)
+def obtener_empleado_por_id(empleado_id: int, db: Session = Depends(get_db)):
+    empleado = empleado_service.get_empleado_por_id(db, empleado_id)
+    if not empleado:
+        raise HTTPException(status_code=404, detail="Empleado no encontrado")
+    return empleado
+

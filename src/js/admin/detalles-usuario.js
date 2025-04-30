@@ -100,16 +100,13 @@ document.addEventListener("DOMContentLoaded", () => {
     skills: ["JavaScript", "React", "Node.js", "SQL", "Git"],
   };
 
-  // Almacenar datos del empleado en localStorage si no existen
-  if (!localStorage.getItem("selectedEmployee")) {
-    localStorage.setItem("selectedEmployee", JSON.stringify(mockEmployee));
-  }
+  
 
   // Cargar datos del empleado
   loadEmployeeData();
 
   // Inicializar navegación
-  initNavigation();
+  //initNavigation();
 
   // Inicializar calendarios
   initCalendars();
@@ -122,76 +119,125 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Carga los datos del empleado desde localStorage
+ * Carga los datos del empleado desde la API
+ * y actualiza la interfaz con la información recibida
  */
 function loadEmployeeData() {
-  const employeeData = localStorage.getItem("selectedEmployee");
-  if (!employeeData) {
-    window.location.href = "admin.html";
-    return;
-  }
+  // Obtener el ID del empleado desde localStorage
+  const id_empleado = localStorage.getItem("id_empleado_detalle");
 
-  const employee = JSON.parse(employeeData);
+  console.log("id del empleado detalle",id_empleado)
+ 
 
-  // Actualizar información básica
-  document.getElementById(
-    "employee-name"
-  ).textContent = `${employee.firstName} ${employee.lastName}`;
-  document.getElementById("employee-position").textContent = employee.position;
-  document.getElementById("employee-department").textContent =
-    employee.department;
+  // Realizar petición a la API
+  axios.get(`http://127.0.0.1:8000/empleado/${id_empleado}`)
 
-  // Actualizar estado
-  const statusElement = document.getElementById("employee-status");
-  statusElement.textContent = employee.status;
-  statusElement.className = `badge ${
-    employee.status === "Active"
-      ? "bg-success"
-      : employee.status === "Inactive"
-      ? "bg-danger"
-      : "bg-warning"
-  }`;
+    .then(response => {
+      const employee = response.data;
+      console.log("Datos del empleado recibidos de la API:", employee);
 
-  // Actualizar información detallada
-  document.getElementById("employee-id").textContent = employee.id
-    ? `EMP-${employee.id.toString().padStart(3, "0")}`
-    : "N/A";
-  document.getElementById("employee-hire-date").textContent = formatDate(
-    employee.hireDate
-  );
-  document.getElementById("employee-email").textContent =
-    employee.email || "N/A";
-  document.getElementById("employee-phone").textContent =
-    employee.phone || "N/A";
-  document.getElementById("employee-birth-date").textContent = formatDate(
-    employee.birthDate
-  );
-  document.getElementById("employee-address").textContent =
-    employee.address || "N/A";
-  document.getElementById("employee-emergency-contact").textContent =
-    employee.emergencyContact || "N/A";
-  document.getElementById("employee-emergency-phone").textContent =
-    employee.emergencyPhone || "N/A";
-  document.getElementById("employee-notes").textContent =
-    employee.notes || "Sin notas";
+      // 1. ACTUALIZAR INFORMACIÓN BÁSICA
+      // Actualizar nombre y apellido
+      document.getElementById("employee-name").textContent = 
+        `${employee.nombre} ${employee.apellido}`;
+      
+      // Actualizar posición y rol
+      document.getElementById("employee-position").textContent = employee.posicion;
+      document.getElementById("employee-department").textContent = employee.rol;
 
-  // Actualizar habilidades
-  const skillsContainer = document.getElementById("employee-skills");
-  if (employee.skills && employee.skills.length > 0) {
-    const skillsHTML = employee.skills
-      .map(
-        (skill) => `<span class="badge bg-primary skill-badge">${skill}</span>`
-      )
-      .join("");
-    skillsContainer.innerHTML = skillsHTML;
-  } else {
-    skillsContainer.innerHTML =
-      '<p class="text-muted">No hay habilidades registradas</p>';
-  }
+      // 2. ACTUALIZAR ESTADO
+      const statusElement = document.getElementById("employee-status");
+      statusElement.textContent = employee.estado ? "Activo" : "Inactivo";
+      statusElement.className = `badge ${
+        employee.estado ? "bg-success" : "bg-danger"
+      }`;
 
-  // Cargar datos para las solicitudes y rendimiento
-  loadRequestsData(employee);
-  loadPerformanceData(employee);
+      // 3. ACTUALIZAR INFORMACIÓN DETALLADA
+      // ID de empleado
+      document.getElementById("employee-id").textContent = 
+        employee.Id_empleado || "N/A";
+      
+      // Fechas
+      document.getElementById("employee-hire-date").textContent = 
+        formatDate(employee.fecha_contratacion);
+      document.getElementById("employee-birth-date").textContent = 
+        formatDate(employee.fecha_nacimiento);
+
+      // Información de contacto
+      document.getElementById("employee-email").textContent = 
+        employee.correo || "N/A";
+      document.getElementById("employee-phone").textContent = 
+        employee.telefono || "N/A";
+
+      // 4. ACTUALIZAR HABILIDADES
+      const skillsContainer = document.getElementById("employee-skills");
+      if (employee.habilidades) {
+        // Convertir la cadena de habilidades en un array
+        const skillsArray = employee.habilidades.split(',').map(skill => skill.trim());
+        const skillsHTML = skillsArray
+          .map(skill => `<span class="badge bg-primary skill-badge">${skill}</span>`)
+          .join("");
+        skillsContainer.innerHTML = skillsHTML;
+      } else {
+        skillsContainer.innerHTML = 
+          '<p class="text-muted">No hay habilidades registradas</p>';
+      }
+
+      // 5. ACTUALIZAR INFORMACIÓN ADICIONAL (usando datos de mockEmployee si es necesario)
+      const mockEmployee = {
+        address: "Calle Principal 123, Ciudad",
+        emergencyContact: "María Pérez",
+        emergencyPhone: "(555) 987-6543",
+        notes: "Empleado destacado con excelentes habilidades técnicas y de trabajo en equipo."
+      };
+
+      document.getElementById("employee-address").textContent = 
+        mockEmployee.address;
+      document.getElementById("employee-emergency-contact").textContent = 
+        mockEmployee.emergencyContact;
+      document.getElementById("employee-emergency-phone").textContent = 
+        mockEmployee.emergencyPhone;
+      document.getElementById("employee-notes").textContent = 
+        mockEmployee.notes;
+
+      // 6. CARGAR DATOS ADICIONALES
+      loadRequestsData(employee);
+      loadPerformanceData(employee);
+
+      // Ocultar estado de carga
+      hideLoadingState();
+    })
+    .catch(error => {
+      console.error('Error al obtener los datos del empleado:', error);
+      showErrorState();
+      // Redirigir a la página de administración después de 3 segundos
+      setTimeout(() => {
+        window.location.href = "admin.html";
+      }, 3000);
+    });
+}
+
+
+
+/**
+ * Oculta el estado de carga
+ */
+function hideLoadingState() {
+  // Restaurar el contenido original
+  document.getElementById("employee-details-container").style.display = "block";
+}
+
+/**
+ * Muestra el estado de error
+ */
+function showErrorState() {
+  const errorHTML = `
+    <div class="alert alert-danger text-center">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      Error al cargar la información del empleado. Redirigiendo...
+    </div>
+  `;
+  document.getElementById("employee-details-container").innerHTML = errorHTML;
 }
 
 /**

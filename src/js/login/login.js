@@ -32,7 +32,8 @@ const guardarDatosUsuario = (loginData) => {
     
     localStorage.setItem("id_usuario", idUsuario);
     localStorage.setItem("rol", loginData.rol);
-    localStorage.setItem("ultimoAcceso", new Date().getTime());
+    localStorage.setItem("fecha de ingreso a la plataforma", new Date().toLocaleDateString());
+    localStorage.setItem("hora de acceso",new Date().toLocaleTimeString())
 };
 
 const redirigirUsuario = (rol) => {

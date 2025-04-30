@@ -10,7 +10,7 @@ def get_empleados(db:Session):
     return db.query(tables_model.Empleado).all()
 
 #obtener empleado por id
-def get_empleado(db: Session, id: int):
+def get_empleado_por_id(db, id: int):
     return db.query(tables_model.Empleado).filter(tables_model.Empleado.id == id).first()
 
 #crear empleado

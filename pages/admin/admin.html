@@ -353,19 +353,23 @@
                   <div class="col-md-3">
                     <select class="form-select" id="department-filter">
                       <option value="">todas las areas</option>
-                      <option value="Engineering">Engineering</option>
-                      <option value="Marketing">Marketing</option>
-                      <option value="Sales">Sales</option>
-                      <option value="HR">HR</option>
-                      <option value="Finance">Finance</option>
+                      <option value="junior Dev">junior Dev</option>
+                      <option value="Senior Dev">Senior Dev</option>
+                      <option value="Project Manager">Project Manager</option>
+                      <option value="Ventas">Ventas</option>
+                      <option value="Atencion Clientes">
+                        Atencion clientes
+                      </option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <select class="form-select" id="status-filter">
                       <option value="">todos los estados</option>
-                      <option value="Active">Activo</option>
-                      <option value="Inactive">Inactivo</option>
-                      <option value="On Leave">en espera</option>
+                      <option value="laburando">laburando</option>
+                      <option value="esperando ingreso">
+                        esperando ingreso
+                      </option>
+                      <option value="descansando">descansando</option>
                     </select>
                   </div>
                 </div>
@@ -409,11 +413,10 @@
                 >
                   <div>
                     <button
-                      class="btn btn-sm btn-danger"
+                      class="btn btn-sm btn-primary"
                       id="delete-selected-btn"
-                      disabled
                     >
-                      <i class="fas fa-trash me-1"></i> eliminar seleccionado
+                      <i class="fas fa-chart-bar me-2"></i>exportarTabla
                     </button>
                   </div>
                   <nav aria-label="Employee pagination">
@@ -895,6 +898,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Chart.js biblioteca para los graficos-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
     <!-- archivos necesarios para el dashboard -->
     <!-- archivo que contiene las funciones de las navegaciones entre las secciones-->
