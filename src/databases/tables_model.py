@@ -24,7 +24,7 @@ class Empleado(Base):
     fecha_contratacion = Column(String)
     salario = Column(Integer)
     posicion = Column(String)
-    estado = Column(Boolean, default=True)
+    estado = Column(String)
     
     rol = Column(String)
     #id del area de trabajo donde trabaja el empleado

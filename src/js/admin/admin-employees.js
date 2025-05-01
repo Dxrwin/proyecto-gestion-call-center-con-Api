@@ -266,9 +266,9 @@ const employeesState = {
   },
   //paginacion de empleados, pagina actual, total de paginas y items por pagina
   pagination: {
-    currentPage: 1,
-    totalPages: 1,
-    itemsPerPage: 10,
+    currentPage: 1,//pagina predeterminada a mostrar
+    totalPages: 3,//paginas maximas a mostrar
+    itemsPerPage: 5,//numero de usuarios por paginacion
   },
 };
 
@@ -474,7 +474,7 @@ function updateEmployeesTable() {
         <td>${employee.rol}</td>
         <td>${employee.posicion}</td>
         <td>
-          <span class="status-badge ${getStatusClass(testEmployees[employee.id-1].estado)}">${testEmployees[employee.id-1].estado}
+          <span class="status-badge ${getStatusClass(employee.estado)}">${employee.estado}
           </span>
         </td>
         <td>
@@ -686,8 +686,8 @@ function updatePagination() {
  * - Proporciona estilos visuales consistentes
  * - Facilita la identificación visual del estado
  */
-function getStatusClass(status) {
-  switch (status) {
+function getStatusClass(estado) {
+  switch (estado) {
     case "laburando":
       return "status-active";
     case "esperando ingreso":

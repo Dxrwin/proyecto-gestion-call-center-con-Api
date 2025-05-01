@@ -22,9 +22,7 @@ const caseTypeDistributionChart = document.getElementById(
   "case-type-distribution-chart"
 );
 const resolutionTimeChart = document.getElementById("resolution-time-chart");
-const topPerformersTableBody = document.getElementById(
-  "top-performers-table-body"
-);
+const topPerformersTableBody = document.getElementById("top-performers-table-body");
 
 // Reports state
 const reportsState = {
@@ -516,7 +514,9 @@ function getMockReportsData(period, department) {
 
   // Generate employee performance data
   const employeeNames = [
-    "John Doe",
+    
+    
+    "EMANUEL KAGASTEN",
     "Jane Smith",
     "Michael Johnson",
     "Emily Williams",

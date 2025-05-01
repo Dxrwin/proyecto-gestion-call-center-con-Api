@@ -16,8 +16,8 @@ class EmpleadoBase(BaseModel):
     habilidades: str
     fecha_contratacion: str
     salario: int
-    posicion: str
-    estado: bool  # por defecto el empleado esta activo (true)
+    posicion: str #opciones en el estado laburando || esperando ingreso || descansando
+    estado: str  # por defecto el empleado esta activo (true)
     rol: str  # por defecto el empleado es un empleado normal (no admin)
     
 #modelo para crear un empleado (con campo codigo)
