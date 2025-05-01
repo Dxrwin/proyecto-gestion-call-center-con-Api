@@ -788,6 +788,13 @@ function editEmployee(employeeId) {
  * - Muestra notificaciones de éxito/error
  */
 function saveEmployee() {
+
+  // Obtener el último ID del empleado para generar el nuevo ID
+  const ultimoEmpleado = employeesState.employees[employeesState.employees.length - 1];
+  const nuevoId = `EMP-${(parseInt(ultimoEmpleado.Id_empleado.split('-')[1]) + 1).toString().padStart(3, '0')}`;
+  employeeData.Id_empleado = nuevoId;
+  console.log("id del ultimo empleado de la tabla = ",nuevoId)
+
   //antes de guardar el empleado se valida el formulario usando checkvalidity
   //checkValidity verifica si todos los campos cumplen con las restricciones de validacion como required, pattern, etc.
   //devuelve true si todos lso campos del formulario son validos y false al menos un campo no cumple con las restricciones
@@ -797,20 +804,22 @@ function saveEmployee() {
     employeeForm.reportValidity();
     return;
   }
+  
 
   // Obtener los datos del formulario
   const employeeData = {
-    firstName: document.getElementById("emp-first-name").value,
-    lastName: document.getElementById("emp-last-name").value,
-    email: document.getElementById("emp-email").value,
-    phone: document.getElementById("emp-phone").value,
-    department: document.getElementById("emp-department").value,
-    position: document.getElementById("emp-position").value,
-    hireDate: document.getElementById("emp-hire-date").value,
-    status: document.getElementById("emp-status").value,
-    address: document.getElementById("emp-address").value,
-    notes: document.getElementById("emp-notes").value,
+    nombre: document.getElementById("emp-first-name").value,
+    apellido: document.getElementById("emp-last-name").value,
+    correo: document.getElementById("emp-email").value,
+    telefono: document.getElementById("emp-phone").value,
+    posicion: document.getElementById("emp-department").value,
+    salario: document.getElementById("emp-salario").value,
+    fecha_contratacion: document.getElementById("emp-hire-date").value,
+    //: document.getElementById("emp-status").value,
+    direccion: document.getElementById("emp-direccion residencia").value,
+    descripcion_de_funciones: document.getElementById("emp-notes").value,
   };
+
 
   if (employeesState.isEditing) {
     //si el estado es true se llama a la funcion updateEmployee pasandole el id del empleado y los datos del empleado
@@ -819,8 +828,6 @@ function saveEmployee() {
   } else {
     //si el estado es false se llama a la funcion createEmployee pasandole los datos del empleado
     //la funcion createEmployee crea un nuevo empleado y lo agrega al array de empleados
-    //se le asigna un id aleatorio al empleado creado y se le asigna un employeeId que es un string con el formato EMP-001, EMP-002, etc.
-
     createEmployee(employeeData);
   }
 }
@@ -834,38 +841,36 @@ function saveEmployee() {
  * - Maneja la respuesta del servidor
  */
 function createEmployee(employeeData) {
-  // Crear un nuevo objeto de empleado
-  const newEmployee = {
-    id: Math.floor(Math.random() * 1000) + 100, //genera ID aleatorio
-    ...employeeData, //se le asignan los datos del empleado de employeeData
-    //se genera un identificador unico usando formato EMP-XXX donde XXX es un numero basado en la longitud del array mas 1
-    //se usa el metodo padStart para agregar ceros a la izquierda hasta completar 3 digitos
-    employeeId: `EMP-${(employeesState.employees.length + 1)
-      .toString()
-      .padStart(3, "0")}`,
-    birthDate: null,
-    emergencyContact: "",
-    emergencyPhone: "",
-    skills: ["javascript", "html", "css"],
-    performance: {
-      productivity: 80,
-      quality: 80,
-      teamwork: 80,
-    },
-  };
 
-  // Agregar al nuevo empleado al estado global
-  //el nuevo empleado se le agrega al array utilizando el metodo push
-  employeesState.employees.push(newEmployee);
 
-  //se llama la funcion applyFilters para aplicar los filtros y mostrar el nuevo empleado en la tabla
-  applyFilters();
+  // Realizar una petición POST para crear un nuevo empleado en el servidor
 
-  // Ocultar el modal el metodo hide es de bootstrap para ocultar el modal
-  employeeModal.hide();
+  axios.post('http://127.0.0.1:8000/empleadoylogin', employeeData, {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    if (response.status === 201) {
+      // Agregar al nuevo empleado al estado global
+      employeesState.employees.push(employeeData);
 
-  // Mostrar mensaje de éxito
-  showNotification("Empleado creado exitosamente", "success");
+      // Aplicar filtros para mostrar el nuevo empleado en la tabla
+      applyFilters();
+
+      // Ocultar el modal
+      employeeModal.hide();
+
+      // Mostrar mensaje de éxito
+      showNotification("Empleado creado exitosamente", "success");
+    } else {
+      throw new Error('Error al crear el empleado');
+    }
+  })
+  .catch(error => {
+    console.error('Error al crear el empleado:', error);
+    showNotification('Error al crear el empleado', 'error');
+  });
 }
 
 /**
