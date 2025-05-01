@@ -34,7 +34,7 @@ const changePasswordForm = document.getElementById("change-password-form");
 // Original profile data for cancellation
 const originalProfileData = {};
 
-// Constantes para rutas
+// Constantes para ruta de la imagen perfil
 const RUTA_BASE_IMAGENES = "/src/assets/img/";
 
 /**

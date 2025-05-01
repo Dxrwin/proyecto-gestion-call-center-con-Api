@@ -37,8 +37,11 @@ def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate):
             correo = empleado.correo,
             contrasena = empleado.contrasena,
             telefono = empleado.telefono,
+            contacto_emergencia = empleado.contacto_emergencia,
+            telefono_emergencia = empleado.telefono_emergencia,
             habilidades = empleado.habilidades,
             fecha_contratacion = empleado.fecha_contratacion,
+            area = empleado.area,
             salario = empleado.salario,
             posicion = empleado.posicion,
             estado = empleado.estado,  # Por defecto el empleado está activo (true)

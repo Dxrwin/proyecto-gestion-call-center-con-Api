@@ -20,12 +20,14 @@ class Empleado(Base):
     correo = Column(String, unique=True)
     contrasena = Column(String)
     telefono = Column(String)
+    contacto_emergencia = Column(String)
+    telefono_emergencia = Column(String)
     habilidades = Column(String)
     fecha_contratacion = Column(String)
+    area = Column(String)
     salario = Column(Integer)
     posicion = Column(String)
     estado = Column(String)
-    
     rol = Column(String)
     #id del area de trabajo donde trabaja el empleado
     #el id del area de trabajo es una llave foranea que hace referencia a la tabla areas_trabajo
@@ -182,6 +184,7 @@ class Administrador(Base):
     apellido = Column(String)
     correo = Column(String, unique=True)
     contrasena = Column(String)
+    direccion = Column(String)
     telefono = Column(String)
     rol = Column(String)
     #id del area de trabajo donde trabaja el administrador

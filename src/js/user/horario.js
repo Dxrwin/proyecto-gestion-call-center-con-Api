@@ -43,6 +43,7 @@ function loadMockScheduleData() {
   const today = new Date()
   const startOfWeek = getStartOfWeek(today)
 
+
   // Crear eventos de prueba
   scheduleState.events = [
     {
@@ -131,7 +132,7 @@ function generateSchedule() {
 
   // Generar la fila de encabezados con los nombres de los días y las fechas
   const headerRow = document.createElement("tr")
-  headerRow.innerHTML = "<th>Time</th>"
+  headerRow.innerHTML = "<th>HORA</th>"
 
   // Agregar los encabezados de los días con las fechas
   for (let day = 0; day < 5; day++) {
@@ -328,24 +329,33 @@ function showNextWeek() {
  * Actualizar la visualización de la semana
  */
 function updateWeekDisplay() {
+function updateWeekDisplay() {
+  // Obtiene la fecha de inicio de la semana actual desde el estado global
   const weekStart = scheduleState.currentWeekStart
-  const weekEnd = new Date(weekStart)
-  weekEnd.setDate(weekEnd.getDate() + 4) // Friday
 
+  // Crea una nueva fecha basada en el inicio de la semana para calcular el final (viernes)
+  const weekEnd = new Date(weekStart)
+  // Ajusta la fecha sumando 4 días al lunes para obtener el viernes de la misma semana
+  weekEnd.setDate(weekEnd.getDate() + 4) // Viernes
+
+  // Formatea la fecha de inicio (lunes) en formato "mes día" (ej: "junio 3")
+  
   const startStr = weekStart.toLocaleDateString([], { month: "long", day: "numeric" })
+  // Formatea la fecha de fin (viernes) en formato "mes día, año" (ej: "junio 7, 2024")
   const endStr = weekEnd.toLocaleDateString([], { month: "long", day: "numeric", year: "numeric" })
 
+  // Actualiza el texto del elemento en el DOM para mostrar el rango de la semana
   currentWeekDisplay.textContent = `${startStr} - ${endStr}`
 }
+}
 
-/**
- * Obtener el inicio de la semana (Lunes) para una fecha dada
- * @param {Date} date - La fecha
- * @returns {Date} - El inicio de la semana
- */
+
+// Función para obtener el inicio de la semana (Lunes) para una fecha dada
+// @param {Date} date - La fecha
+// @returns {Date} - El inicio de la semana
 function getStartOfWeek(date) {
   const day = date.getDay()
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1) // Adjust for Sunday
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1) // Ajustar para el domingo
   const monday = new Date(date)
   monday.setDate(diff)
   monday.setHours(0, 0, 0, 0)

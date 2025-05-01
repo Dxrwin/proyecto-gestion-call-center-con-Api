@@ -13,8 +13,11 @@ class EmpleadoBase(BaseModel):
     correo: str
     contrasena: str
     telefono: str
+    contacto_emergencia : str
+    telefono_emergencia : str
     habilidades: str
     fecha_contratacion: str
+    area :str
     salario: int
     posicion: str #opciones en el estado laburando || esperando ingreso || descansando
     estado: str  # por defecto el empleado esta activo (true)

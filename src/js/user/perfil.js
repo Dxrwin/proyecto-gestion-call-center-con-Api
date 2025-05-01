@@ -34,9 +34,15 @@ function initProfile() {
   uploadResumeBtn.addEventListener("click", triggerResumeUpload)
   resumeInput.addEventListener("change", handleResumeUpload)
 
+  //cargar perfil empleado
+  loadEmployeeProfile();
+
   // Almacenar datos originales de perfil
   storeOriginalProfileData()
 }
+
+// Constantes para ruta de la imagen perfil
+const RUTA_BASE_IMAGENES = "/src/assets/img/";
 
 /**
  * Almacenar los datos originales de perfil para cancelación
@@ -46,6 +52,131 @@ function storeOriginalProfileData() {
     originalProfileData[input.id] = input.value
   })
 }
+
+function loadEmployeeProfile() {
+
+
+    // objeto usuario de prueba
+    const userData = {
+      firstName: "Darwin",
+      lastName: "Pacheco",
+      email: "Darwin@gmail.com",
+      phone: "3002613148",
+      position: "soporte tecnico",
+      department: "area tecnica",
+      birthDate: "1999-05-15",
+      address: "las moras",
+      emergencyContact: "alex char",
+      emergencyPhone: "5 te la meto,8te la enclocho",
+    };
+
+    fetchEmployeeProfile()
+    .then((data) => {
+      console.log("Datos recibidos de la api para asignacion en lso campos:", data);
+      
+
+       // colocar datos del objeto en la interfaz usuario
+    document.getElementById("first-name").value = data.nombre || userData.firstName;
+    document.getElementById("last-name").value = data.apellido || userData.lastName;
+    document.getElementById("email").value = data.correo || userData.email;
+    document.getElementById("phone").value = data.telefono || userData.phone;
+    document.getElementById("birth-date").value = data.fecha_nacimiento || userData.birthDate;
+    document.getElementById("address").value = data.direccion || userData.address;
+    document.getElementById("emergency-contact").value =data.contacto_emergencia || userData.emergencyContact;
+    document.getElementById("emergency-phone").value = data.telefono_emergencia || userData.emergencyPhone;
+    document.getElementById("profile-department").textContent = data.area || userData.department;
+
+      // Actualizar la información en el encabezado del perfil
+      document.getElementById("profile-name").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+      document.getElementById("profile-position").textContent = data.rol || "";
+
+      // Actualizar la información en el sidebar
+      document.getElementById("sidebar-username").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+      document.getElementById("sidebar-position").textContent = data.rol || "";
+
+      // Actualizar la imagen de perfil si existe
+      if (data.imagen_perfil) {
+        const rutaImagen = `${RUTA_BASE_IMAGENES}${data.imagen_perfil}`;
+        console.log("Ruta completa de la imagen:", rutaImagen);
+        
+        // Verificar si la imagen existe antes de asignarla
+        const img = new Image();
+        img.onload = function() {
+          profilePicture.src = rutaImagen;
+          sidebarAvatar.src = rutaImagen;
+        };
+        img.onerror = function() {
+          console.error("Error al cargar la imagen:", rutaImagen);
+          // Asignar una imagen por defecto si la imagen no se encuentra
+          profilePicture.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+          sidebarAvatar.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+        };
+        img.src = rutaImagen;
+      } else {
+        // Si no hay imagen de perfil, usar la imagen por defecto
+        profilePicture.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+        sidebarAvatar.src = `${RUTA_BASE_IMAGENES}avatarimage.png`;
+      }
+
+      // Almacenar los datos originales
+      //storeOriginalProfileData();
+    })
+    .catch((error) => {
+      console.error("Error al cargar el perfil del empleado:", error);
+      showNotification("Error al cargar los datos del perfil", "error");
+    });
+}
+
+
+//realiza una peticion a la api para pedir los datos del perfil del administrador
+function fetchEmployeeProfile() {
+  //obtiene el id y el rol del usuario desde el localstorage
+  //hace una peticion get al servidor para obtener los datos del admin
+  //procesa y devuelve los datos
+  const idUsuario = localStorage.getItem("id_usuario");
+  const rolUsuario = localStorage.getItem("rol");
+
+  console.log("ID Usuario desde localStorage:", idUsuario);
+  console.log("Rol Usuario desde localStorage:", rolUsuario);
+
+  if (!idUsuario || !rolUsuario) {
+    console.error("No se encontraron datos de usuario en localStorage");
+    return Promise.reject("Usuario no autenticado");
+  }
+
+  return axios
+    .get(`http://127.0.0.1:8000/empleado/${idUsuario}`)
+    .then((response) => {
+      const userData = response.data;
+      console.log("Datos completos del empleado:", userData);
+      
+      // Verifica si cada dato es dato o undefined antes de asignarlo
+      const nombre = userData?.nombre || "";
+      const apellido = userData?.apellido || "";
+      const correo = userData?.correo || "";
+      const telefono = userData?.telefono || "";
+      const rol = userData?.rol || "";
+      const imagen_perfil = userData?.imagen_perfil || "";
+
+      console.log("Datos OBtenidos de la Api y validados que NO fuesen vacios para poder usar:", {
+        nombre,
+        apellido,
+        correo,
+        telefono,
+        rol,
+        imagen_perfil
+      });
+
+      return userData;
+    })
+    .catch((error) => {
+      console.error("Error al obtener el perfil:", error);
+      showNotification("Error al cargar el perfil del usuario", "error");
+      throw error;
+    });
+}
+
+
 
 /**
  * Habilitar la edición de la información del perfil

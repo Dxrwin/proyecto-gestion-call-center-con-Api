@@ -73,7 +73,7 @@ function showSection(sectionId) {
         sectionTitle.textContent = "INTERCAMBIO HORARIO";
         break;
       default:
-        sectionTitle.textContent = "DASHBOARD AGENTE";
+        sectionTitle.textContent = "DASHBOARD EMPLEADO";
     }
   }
 }
@@ -82,8 +82,9 @@ function showSection(sectionId) {
  * datos de objetos para demostracion
  */
 function loadMockData() {
+
   // objeto usuario de prueba
-  const userData = {
+  /*const userData = {
     firstName: "Darwin",
     lastName: "Pacheco",
     email: "Darwin@gmail.com",
@@ -117,7 +118,7 @@ function loadMockData() {
   ).textContent = `${userData.firstName} ${userData.lastName}`;
   document.getElementById("profile-position").textContent = userData.position;
   document.getElementById("profile-department").textContent =
-    userData.department;
+    userData.department;*/
 
   // objeto de empleados de ejemplo
   const employees = [
@@ -134,6 +135,7 @@ function loadMockData() {
     option.textContent = `${employee.name} (${employee.position})`;
     exchangeEmployeeSelect.appendChild(option);
   });
+  
 }
 
 //inicializar el dashboard con toda la informacion
