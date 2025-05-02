@@ -491,11 +491,13 @@
                         id="report-department-filter"
                       >
                         <option value="">todas las areas</option>
-                        <option value="Engineering">Engineering</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Sales">Sales</option>
-                        <option value="HR">HR</option>
-                        <option value="Finance">Finance</option>
+                        <option value="Ventas">Ventas</option>
+                        <option value="Soporte tecnico">Soporte tecnico</option>
+                        <option value="Atencion al cliente">
+                          Atencion al cliente
+                        </option>
+                        <option value="contaduria">contaduria</option>
+                        <option value="desarrollo">desarrollo</option>
                       </select>
                     </div>
                   </div>
@@ -576,10 +578,10 @@
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>Employee</th>
-                            <th>Department</th>
-                            <th>Cases Resolved</th>
-                            <th>Avg. Resolution Time</th>
+                            <th>Empleado</th>
+                            <th>Area</th>
+                            <th>Resolucion de Casos</th>
+                            <th>Tiempo Promedio Resolucion</th>
                           </tr>
                         </thead>
                         <tbody id="top-performers-table-body">
@@ -655,6 +657,18 @@
                     required
                   />
                 </div>
+
+                <div class="col-md-6">
+                  <label for="emp-Id_empleado" class="form-label"
+                    >Id empleado</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emp-Id_empleado"
+                  />
+                </div>
+
                 <div class="col-md-6">
                   <label for="emp-last-name" class="form-label"
                     >Apellidos</label
@@ -666,33 +680,49 @@
                     required
                   />
                 </div>
+
+                <div class="col-md-6">
+                  <label for="emp-fecha_nacimiento" class="form-label"
+                    >fecha nacimiento</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="emp-fecha_nacimiento"
+                  />
+                </div>
               </div>
+
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="emp-email" class="form-label">Correo</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="emp-email"
-                    required
-                  />
+                  <input type="email" class="form-control" id="emp-email" />
                 </div>
+
+                <div class="col-md-6">
+                  <label for="emp-password" class="form-label"
+                    >contraseña</label
+                  >
+                  <input type="tel" class="form-control" id="emp-password" />
+                </div>
+              </div>
+
+              <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="emp-phone" class="form-label">Telefono</label>
                   <input
-                    type="tel"
+                    type="text"
                     class="form-control"
                     id="emp-phone"
                     required
                   />
                 </div>
-              </div>
-              <div class="row mb-3">
+
                 <div class="col-md-6">
                   <label for="emp-department" class="form-label">Area</label>
                   <select class="form-select" id="emp-department" required>
-                    <option value="Junior dev">Junior dev</option>
-                    <option value="Senior dev">Senior dev</option>
+                    <option value="desarrollo web">desarrollo web</option>
+                    <option value="soporte tecnico">Soporte tecnico</option>
                     <option value="contabilidad">contabilidad</option>
                     <option value="ventas">ventas</option>
                     <option value="atencion al cliente">
@@ -700,12 +730,45 @@
                     </option>
                   </select>
                 </div>
+              </div>
+
+              <div class="row mb-3">
                 <div class="col-md-6">
-                  <label for="emp-position" class="form-label">Salario</label>
+                  <label for="emp-salario" class="form-label">Salario</label>
+                  <input type="number" class="form-control" id="emp-salario" />
+                </div>
+
+                <div class="col-md-6">
+                  <label for="emp-contacto_emergencia" class="form-label"
+                    >contacto de emergencia</label
+                  >
                   <input
-                    type="number"
+                    type="text"
                     class="form-control"
-                    id="emp-salario"
+                    id="emp-contacto_emergencia"
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="emp-telefono_emergencia" class="form-label"
+                    >telefono de emergencia</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emp-telefono_emergencia"
+                    required
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label for="emp-posicion" class="form-label">posicion</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emp-posicion"
                     required
                   />
                 </div>
@@ -725,14 +788,8 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label for="emp-address" class="form-label"
-                    >direccion residencia</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="emp-direccion residencia"
-                  />
+                  <label for="emp-estado" class="form-label">estado</label>
+                  <input type="text" class="form-control" id="emp-estado" />
                 </div>
               </div>
 

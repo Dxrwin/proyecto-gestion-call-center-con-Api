@@ -31,7 +31,7 @@ def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate,horario:Hora
         nuevo_empleado = tables_model.Empleado(
             id = empleado.id,  # Asignar el id para el registro en la tabla empleados
             Id_empleado = empleado.Id_empleado,
-            imagen_perfil = empleado.imagen_perfil,
+            #imagen_perfil = empleado.imagen_perfil,
             nombre = empleado.nombre,
             apellido = empleado.apellido,
             fecha_nacimiento = empleado.fecha_nacimiento,
@@ -40,9 +40,10 @@ def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate,horario:Hora
             telefono = empleado.telefono,
             contacto_emergencia = empleado.contacto_emergencia,
             telefono_emergencia = empleado.telefono_emergencia,
-            habilidades = empleado.habilidades,
+            #habilidades = empleado.habilidades,
             fecha_contratacion = empleado.fecha_contratacion,
             area = empleado.area,
+            descripcion_funciones=empleado.descripcion_funciones,
             salario = empleado.salario,
             posicion = empleado.posicion,
             estado = empleado.estado,  # Por defecto el empleado está activo (true)

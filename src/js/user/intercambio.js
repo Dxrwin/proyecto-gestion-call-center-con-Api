@@ -328,8 +328,7 @@ function submitExchangeRequest(e) {
 
   // Obtener información del empleado seleccionado
   const employeeSelect = document.getElementById("exchange-employee");
-  const selectedEmployee =
-    employeeSelect.options[employeeSelect.selectedIndex].text;
+  const selectedEmployee =employeeSelect.options[employeeSelect.selectedIndex].text;
 
   // Crear objeto de solicitud con fecha actual
   const currentDate = new Date();

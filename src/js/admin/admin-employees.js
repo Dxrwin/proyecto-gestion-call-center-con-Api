@@ -338,16 +338,16 @@ function loadEmployees() {
       if (response.status === 200) {
         // Actualizar el estado con los datos recibidos
         employeesState.employees = response.data;
-        console.log("datos añadidos al esatdo global de empleados =",employeesState.employees)
+        console.log("datos recibidos de la api y añadidos al estado global de los empleados =",employeesState.employees)
         
-        // Filtrar los empleados inicialmente
+        // Filtrar los empleados inicialmente para que se rendericen en la tabla
         employeesState.filteredEmployees = [...response.data];
         
         // Actualizar la tabla de empleados
         updateEmployeesTable();
         
         // Mostrar notificación de éxito
-        showNotification('Datos de empleados cargados exitosamente', 'success');
+        //showNotification('Datos de empleados cargados exitosamente', 'success');
       } else {
         throw new Error('Error en la respuesta del servidor');
       }
@@ -505,17 +505,18 @@ function updateEmployeesTable() {
   //el innerHTML es una propiedad que establece o obtiene el contenido HTML de un elemento
   employeesTableBody.innerHTML = tableHTML;
 
-  //con el querySelectorAll se seleccionan todos los botones de editar y se iteran con un forEach
-  //agregando un event listener a cada boton de editar, al hacer click en el boton de editar se llama a la funcion editEmployee
-  document.querySelectorAll('[data-action="edit"]').forEach((btn) => {
-    btn.addEventListener("click", () => {
-      //el data-employee-id es un atributo personalizado que contiene el id del empleado, se obtiene con el metodo getAttribute
-      //el metodo Number.parseInt convierte una cadena a un numero entero en este caso el id del empleado
-      //lo almacena en la variable employeeId
-      const employeeId = Number.parseInt(btn.getAttribute("data-employee-id"));
-      //llama a la funcion editEmployee y le pasa el id del empleado
-      //la funcion editEmployee busca el empleado en el array de empleados y lo edita
-      editEmployee(employeeId);
+  //selecciona el primer boton de editar y agrega un event listener
+  //al hacer click en el boton de editar se llama a la funcion editEmployee
+  document.querySelectorAll('[data-action="edit"]').forEach((btn)=> { btn.addEventListener("click", () => {
+    //el data-employee-id es un atributo personalizado que contiene el id del empleado, se obtiene con el metodo getAttribute
+    //el metodo Number.parseInt convierte una cadena a un numero entero en este caso el id del empleado
+    //lo almacena en la variable employeeId
+    const employeeId = Number.parseInt(btn.getAttribute("data-employee-id"));
+
+    //console.log("id obtenido del elemento editar", employeeId)
+    //llama a la funcion editEmployee y le pasa el id del empleado
+    //la funcion editEmployee busca el empleado en el array de empleados y lo edita
+    editEmployee(employeeId);
     });
   });
 
@@ -711,6 +712,7 @@ function showAddEmployeeModal() {
   // Resetear el formulario o limpiar los campos
   employeeForm.reset();
 
+  
   // Establecer la fecha actual como fecha de contratación predeterminada
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("emp-hire-date").value = today;
@@ -727,7 +729,47 @@ function showAddEmployeeModal() {
 
   // Mostrar el modal en pantalla
   employeeModal.show();
+  // Obtener el último empleado renderizado en la tabla
+  const lastEmployee = employeesState.filteredEmployees[employeesState.filteredEmployees.length - 1];
+  // Si hay un último empleado, agregar su id y nombre al localStorage
+  if (lastEmployee) {
+    console.log("abriendo modal crear empleado,obteniendo el ultimo ussario de la tabla",lastEmployee)
+    localStorage.setItem("ultimoEmpleadoID", lastEmployee.id);
+    localStorage.setItem("ultimoEmpleadoNombre", lastEmployee.nombre);
+  }
 }
+
+
+/*
+ Muestra solo los campos especificados y oculta el resto en el formulario de empleado.
+  @param {Array} camposVisibles - Array de IDs de los campos que se deben mostrar.
+ 
+function mostrarSoloCamposLectura(camposVisibles) {
+  // Selecciona todos los elementos con la clase form-control dentro del formulario
+  const campos = employeeForm.querySelectorAll('.form-control, .form-select, textarea');
+  campos.forEach(campo => {
+    if (camposVisibles.includes(campo.id)) {
+      campo.closest('.col-md-6, .col-md-12, .mb-3, .row').style.display = '';
+      campo.disabled = false; // Opcional: solo lectura
+    } else {
+      campo.closest('.col-md-6, .col-md-12, .mb-3, .row').style.display = 'none';
+    }
+  });
+}
+
+/**
+ * Muestra y habilita todos los campos del formulario de empleado.
+//
+function mostrarYHabilitarTodosLosCampos() {
+  const campos = employeeForm.querySelectorAll('.form-control, .form-select, textarea');
+  campos.forEach(campo => {
+    // Mostrar el contenedor del campo
+    const contenedor = campo.closest('.col-md-6, .col-md-12, .mb-3, .row');
+    if (contenedor) contenedor.style.display = '';
+    // Habilitar el campo
+    campo.disabled = false;
+  });
+}*/
 
 /**
  * Edición de Empleado:
@@ -738,6 +780,10 @@ function showAddEmployeeModal() {
  * - Maneja errores de empleado no encontrado
  */
 function editEmployee(employeeId) {
+
+  const empleadoAeditar = employeesState.employees
+  console.log("empleados disponibles para editar = \n",empleadoAeditar)
+  console.log("id del empleado seleccionado en la tabla = ",employeeId)
   // Encontrar el empleado usando el metodo find del array employees
   //se usa la funcion que si el id coincida con el employeeId
   const employee = employeesState.employees.find(
@@ -754,18 +800,33 @@ function editEmployee(employeeId) {
   //se asigna el objeto del empleado encontrado para que este disponible en el estado global
   employeesState.currentEmployee = employee;
 
+  /* Al abrir el modal en modo solo lectura:
+  mostrarSoloCamposLectura(['emp-email',
+  'emp-department',
+  'emp-salario',
+  'emp-hire-date']);*/
+
+  const areaSelect = document.getElementById("emp-department");
+  areaSelect.options.value = employee.area;
   // Llenar el formulario con los datos del empleado encontrado
   //de esta manera se visualizan los datos del empleado en el modal para ser editados
+  document.getElementById("emp-Id_empleado").value = employee.Id_empleado;
   document.getElementById("emp-first-name").value = employee.nombre;
   document.getElementById("emp-last-name").value = employee.apellido;
   document.getElementById("emp-email").value = employee.correo;
+  document.getElementById("emp-password").value = employee.contrasena;
   document.getElementById("emp-phone").value = employee.telefono;
-  document.getElementById("emp-department").value = employee.posicion;
-  document.getElementById("emp-position").value = employee.posicion;
+  document.getElementById("emp-salario").value = employee.salario;
+  document.getElementById("emp-contacto_emergencia").value = employee.contacto_emergencia;
+  document.getElementById("emp-telefono_emergencia").value = employee.telefono_emergencia;
+  document.getElementById("emp-posicion").value = employee.posicion;
+  document.getElementById("emp-fecha_nacimiento").value = employee.fecha_nacimiento;
+  document.getElementById("emp-salario").text = employee.salario;
   document.getElementById("emp-hire-date").value = employee.fecha_contratacion;
-  document.getElementById("emp-status").value = employee.estado;
-  document.getElementById("emp-address").value = employee.fecha_nacimiento;
-  document.getElementById("emp-notes").value = employee.habilidades;
+  document.getElementById("emp-estado").value = employee.estado;
+  document.getElementById("emp-notes").value = employee.descripcion_funciones;
+
+  
 
   //agregar api para actualizar
 
@@ -773,10 +834,17 @@ function editEmployee(employeeId) {
   document.getElementById("employee-modal-label").textContent =
     "Editar Empleado";
 
+  // Actualizar la descripcion del modal
+  //document.getElementById("employee-modal-_descripcion").textContent =
+    //"descripcion del modal";
+
   // Mostrar el modal
   //se usa el objeto employeemodal una istancia de bootstrap para mostrar el modal en pantalla
   employeeModal.show();
+  localStorage.setItem("id_empleado_para_editar", employeeId);
+
 }
+localStorage.removeItem("id_empleado_para_editar");
 
 /**
  * Guardado de Empleado:
@@ -788,13 +856,9 @@ function editEmployee(employeeId) {
  * - Muestra notificaciones de éxito/error
  */
 function saveEmployee() {
+  
 
-  // Obtener el último ID del empleado para generar el nuevo ID
-  const ultimoEmpleado = employeesState.employees[employeesState.employees.length - 1];
-  const nuevoId = `EMP-${(parseInt(ultimoEmpleado.Id_empleado.split('-')[1]) + 1).toString().padStart(3, '0')}`;
-  employeeData.Id_empleado = nuevoId;
-  console.log("id del ultimo empleado de la tabla = ",nuevoId)
-
+  
   //antes de guardar el empleado se valida el formulario usando checkvalidity
   //checkValidity verifica si todos los campos cumplen con las restricciones de validacion como required, pattern, etc.
   //devuelve true si todos lso campos del formulario son validos y false al menos un campo no cumple con las restricciones
@@ -804,23 +868,30 @@ function saveEmployee() {
     employeeForm.reportValidity();
     return;
   }
+  const ultimoEmpleadoListado = employeesState.employees[employeesState.employees.length - 1];
   
-
-  // Obtener los datos del formulario
+  
+  // Obtener los datos del formulario modal
   const employeeData = {
+    Id_empleado: document.getElementById("emp-Id_empleado").value,
     nombre: document.getElementById("emp-first-name").value,
     apellido: document.getElementById("emp-last-name").value,
     correo: document.getElementById("emp-email").value,
+    contrasena: document.getElementById("emp-password").value,
     telefono: document.getElementById("emp-phone").value,
-    posicion: document.getElementById("emp-department").value,
-    salario: document.getElementById("emp-salario").value,
+    salario: parseInt(document.getElementById("emp-salario").value),
+    contacto_emergencia: document.getElementById("emp-contacto_emergencia").value,
+    telefono_emergencia: document.getElementById("emp-telefono_emergencia").value,
+    posicion: document.getElementById("emp-posicion").value,
+    fecha_nacimiento: document.getElementById("emp-fecha_nacimiento").value,
     fecha_contratacion: document.getElementById("emp-hire-date").value,
-    //: document.getElementById("emp-status").value,
-    direccion: document.getElementById("emp-direccion residencia").value,
-    descripcion_de_funciones: document.getElementById("emp-notes").value,
+    estado: document.getElementById("emp-estado").value,
+    descripcion_funciones: document.getElementById("emp-notes").value,
+    area: document.getElementById("emp-department").value,
+    rol:"empleado"
   };
-
-
+  
+  
   if (employeesState.isEditing) {
     //si el estado es true se llama a la funcion updateEmployee pasandole el id del empleado y los datos del empleado
     //la funcion updateEmployee actualiza el empleado en el array de empleados
@@ -828,8 +899,34 @@ function saveEmployee() {
   } else {
     //si el estado es false se llama a la funcion createEmployee pasandole los datos del empleado
     //la funcion createEmployee crea un nuevo empleado y lo agrega al array de empleados
-    createEmployee(employeeData);
+    let nuevoId = "EMP-01";
+    // Asignar el nuevo ID respecto al ultmo empleado de la tabla o si hay empleados dentro del array
+    if (employeesState.employees.length > 0) {
+
+      console.log("empleados en el array antes crear el id dinamico",employeesState.employees)
+
+      const ultimoEmpleado = employeesState.employees[employeesState.employees.length - 1];
+      const nuevoId = `EMP-${(parseInt(ultimoEmpleado.Id_empleado.split('-')[1]) + 1).toString().padStart(2, '0')}`;
+      console.log("ID NUEVO GENERADO PARA CREAR UN NUEVO EMPELADO = ",nuevoId)
+      //employeeData.Id_empleado = nuevoId;
+      const ultimoempleadoReferencia = ultimoEmpleado.id + 1;
+      employeeData.id =  ultimoempleadoReferencia;
+      console.log("NUMERO id NUEVO GENERADO PARA CREAR UN NUEVO EMPELADO = ",ultimoempleadoReferencia)
+      employeeData.Id_empleado = nuevoId;
+      
+    }else{
+      //se le asigna un id predeterminado si no hay empleados
+      employeeData.Id_empleado = nuevoId;
+    }
+
+
+    
+    console.log("objeto con el id generado",employeeData)
+
+     // Generar nuevo ID para el empleado
+    createEmployee(employeeData); // Enviar el objeto completo
   }
+
 }
 
 /**
@@ -842,16 +939,33 @@ function saveEmployee() {
  */
 function createEmployee(employeeData) {
 
+    // Objeto horario (puedes modificar los valores si lo necesitas dinámico)
+    const horario = {
+      tipo_evento: "Turno regular",
+      titulo_evento: "Turno noche",
+      hora_ingreso: "2024-05-01T19:30:00",
+      hora_salida: "2024-05-01T03:30:00",
+      descripcion: "Turno regular de trabajo"
+    };
+  
+    // Armar el objeto final para la API
+    const dataParaApi = {
+      empleado: employeeData,
+      horario: horario
+    };
+
+    console.log("objeto final para enviarlo a la Api",dataParaApi)
+
 
   // Realizar una petición POST para crear un nuevo empleado en el servidor
 
-  axios.post('http://127.0.0.1:8000/empleadoylogin', employeeData, {
+  axios.post('http://127.0.0.1:8000/empleado_login_horario', dataParaApi, {
     headers: {
       'Content-Type': 'application/json',
     }
   })
   .then(response => {
-    if (response.status === 201) {
+    if (response.status === 200) {
       // Agregar al nuevo empleado al estado global
       employeesState.employees.push(employeeData);
 
@@ -868,6 +982,21 @@ function createEmployee(employeeData) {
     }
   })
   .catch(error => {
+    
+    if(error.response){
+      
+      // Mensaje personalizado del backend
+      const mensaje = error.response.data.detail || "Error desconocido en el servidor";
+      //showNotification(`Error del servidor: ${mensaje}`, 'error');
+      console.error('Respuesta del servidor:', error.response);
+      console.log("respuesta del servidor 2",mensaje)
+
+    } else if (error.request){
+    // No hubo respuesta del servidor
+    //showNotification('No se recibió respuesta del servidor', 'error');
+    console.error('No response:', error.request);
+    }
+    
     console.error('Error al crear el empleado:', error);
     showNotification('Error al crear el empleado', 'error');
   });
@@ -885,12 +1014,10 @@ function updateEmployee(employeeId, employeeData) {
   console.log("entrando al modal e inicializando la funcion editar empleado");
 
   console.log(
-    "funcion actualizar Empleado \n id_empleado obtenido = ",
+    "funcion actualizar Empleado \n id_empleado obtenido por parametro = ",
     employeeId,
-    " \n datos del empleado por el id = ",
-    employeesState.employees[employeeId - 1],
-    "\n datos ingresados que actualizaran al empleado = ",
-    employeeData
+    " \n datos del empleado por el id del paramtero = ",
+    employeesState.employees[employeeId - 1]
   );
 
   const index = employeesState.employees.findIndex(

@@ -24,13 +24,13 @@ def crear_Empleado(empleado: EmpleadoCreate,horario:HorarioCreate, db: Session =
     if not db_empleado:
         print("status_code=400, error al crear el empleado")
         raise HTTPException(status_code=400, detail="error al insertar el empleado")
-    return db_empleado
+    return db_empleado,200
 
 
 
 
-#ruta para insertar empleado y login
-@router.post("/empleadoylogin", response_model=EmpleadoOut)
+#ruta para insertar empleado y login con su horario
+@router.post("/empleado_login_horario", response_model=EmpleadoOut)
 def insertar_empleado_y_login(empleado: EmpleadoCreate,horario:HorarioCreate, db: Session = Depends(get_db)):
     db_empleado = empleado_service.insertar_empleado_y_login(db, empleado,horario)
     

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class EmpleadoBase(BaseModel):
     
     Id_empleado: str 
-    imagen_perfil: str
+    #imagen_perfil: str
     nombre: str
     apellido: str
     fecha_nacimiento: str
@@ -15,9 +15,10 @@ class EmpleadoBase(BaseModel):
     telefono: str
     contacto_emergencia : str
     telefono_emergencia : str
-    habilidades: str
+    #habilidades: str #DESCOMENTAR PARA añadir validacion nula la base de datos o usar la variable y veriguar como insertar el dato
     fecha_contratacion: str
     area :str
+    descripcion_funciones:str
     salario: int
     posicion: str #opciones en el estado laburando || esperando ingreso || descansando
     estado: str  # por defecto el empleado esta activo (true)
