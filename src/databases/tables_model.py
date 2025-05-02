@@ -111,18 +111,18 @@ class HorarioEmpleado(Base):
     __tablename__ = "horarios_empleados"
 
     id = Column(Integer, primary_key=True, index=True)
-    #registrar el ingreso en el horario
-    fecha_ingreso = Column(String)
+    #id llave roranea que referencia a empleado
+    id_empleado = Column(Integer, ForeignKey("empleados.id"), nullable=True)
+    
+    tipo_evento = Column(String)
+    
+    titulo_evento = Column(String)
+    
+    hora_ingreso = Column(DateTime)
     #registrar la salida en el horario
-    fecha_salida = Column(String)
+    hora_salida = Column(DateTime)
     #registrar los eventos solicitados por el administrador
-    evento = Column(String)
-    #registrar el motivo del evento
-    motivo = Column(String)
-    #registrar el estado del evento
-    estado = Column(String)
-    #registar la fecha de la solicitud del evento
-    fecha_solicitud = Column(String)
+    descripcion = Column(String)
     
     #id del empleado que le pertenece el horario
     #el id del empleado es una llave foranea que hace referencia a la tabla empleados
@@ -141,18 +141,24 @@ class HorarioEmpleado(Base):
     
 #definimos el modelo de la tabla de intercambio de horario del empleado con otro empleado
 class IntercambioHorario(Base):
-    __tablename__ = "intercambios_horario"
-
+    __tablename__ = "intercambios_horario_empleados"
+    
     id = Column(Integer, primary_key=True, index=True)
-    #id del empleado que solicita el intercambio de horario
-    #id_empleado = Column(Integer, ForeignKey("empleados.id"))
-    #id del empleado que recibe el intercambio de horario
-    #id_empleado_intercambio = Column(Integer, ForeignKey("empleados.id"))
-    fecha_intercambio = Column(String)
-    fecha_solicitud = Column(String)
+    
+    #id del empleado que solicita el intercambio
+    id_empleado = Column(Integer, ForeignKey("empleados.id"), nullable=True)
+    #fecha elejida en la interfaz 
+    fecha_intercambio = Column(DateTime)
+    #id a quien va dirigido la solictud
+    id_empleado_solicitado = Column(Integer, ForeignKey("empleados.id"), nullable=True)
+    #fecha actual al generar la solicitud
+    fecha_solicitud = Column(DateTime)
+    #nombre del solicitante el empleado que envia la solicitud
+    Nombre_solicitante = Column(String)
+    #descripcion o razon o mensaje al solicitado puede ser nulo si lo desea el colicitante
+    Descripcion = Column(String, nullable=True)
+    #estado de aprobacion porparte del supervisor para un control de estas solicitudes
     estado = Column(String)
-    motivo = Column(String)
-    fecha_respuesta = Column(String)
     #relacion uno a muchos con la tabla empleado
     #empleado = relationship("Empleado", back_populates="intercambios_horario")
     

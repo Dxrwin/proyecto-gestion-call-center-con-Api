@@ -3,26 +3,28 @@
  * Maneja el estado de intercambios, solicitudes y interacciones con la API
  */
 
-
-
-const bootstrap = window.bootstrap
-
-
+//const bootstrap = window.bootstrap
 
 // Elementos del DOM
-const exchangeStatusToggle = document.getElementById("exchange-status-toggle")
-const exchangeStatusText = document.getElementById("exchange-status-text")
-const exchangeAvailabilityDetails = document.getElementById("exchange-availability-details")
-const availableDates = document.getElementById("available-dates")
-const addDateBtn = document.getElementById("add-date-btn")
-const addDateModal = new bootstrap.Modal(document.getElementById("add-date-modal"))
-const saveDateBtn = document.getElementById("save-date-btn")
-const availableDateInput = document.getElementById("available-date")
-const exchangeRequestForm = document.getElementById("exchange-request-form")
-const exchangeDateInput = document.getElementById("exchange-date")
-const exchangeStatusWarning = document.getElementById("exchange-status-warning")
-const incomingRequests = document.getElementById("incoming-requests")
-const outgoingRequests = document.getElementById("outgoing-requests")
+const exchangeStatusToggle = document.getElementById("exchange-status-toggle");
+const exchangeStatusText = document.getElementById("exchange-status-text");
+const exchangeAvailabilityDetails = document.getElementById(
+  "exchange-availability-details"
+);
+const availableDates = document.getElementById("available-dates");
+const addDateBtn = document.getElementById("add-date-btn");
+const addDateModal = new bootstrap.Modal(
+  document.getElementById("add-date-modal")
+);
+const saveDateBtn = document.getElementById("save-date-btn");
+const availableDateInput = document.getElementById("available-date");
+const exchangeRequestForm = document.getElementById("exchange-request-form");
+const exchangeDateInput = document.getElementById("exchange-date");
+const exchangeStatusWarning = document.getElementById(
+  "exchange-status-warning"
+);
+const incomingRequests = document.getElementById("incoming-requests");
+const outgoingRequests = document.getElementById("outgoing-requests");
 
 // Estado de intercambios
 const exchangeState = {
@@ -30,46 +32,58 @@ const exchangeState = {
   availableDates: [],
   incomingRequests: [],
   outgoingRequests: [],
-}
+};
 
 /**
  * Inicializar la funcionalidad de intercambios
  */
 function initExchange() {
   // Configurar los event listeners
-  exchangeStatusToggle.addEventListener("change", toggleExchangeStatus)
-  addDateBtn.addEventListener("click", showAddDateModal)
-  saveDateBtn.addEventListener("click", saveAvailableDate)
-  exchangeRequestForm.addEventListener("submit", submitExchangeRequest)
+  exchangeStatusToggle.addEventListener("change", toggleExchangeStatus);
+  addDateBtn.addEventListener("click", showAddDateModal);
+  saveDateBtn.addEventListener("click", saveAvailableDate);
+  exchangeRequestForm.addEventListener("submit", submitExchangeRequest);
 
-  // Cargar datos de intercambio de prueba
-  loadMockExchangeData()
+  // Cargar datos de intercambio de prueba solo si no se requiera base de datos
+  //loadMockExchangeData();
+
+  // Cargar empleados disponibles
+  loadAvailableEmployees();
+
+  // Cargar solicitudes del empleado actual
+  loadEmployeeRequests();
 
   // Actualizar la interfaz con valores iniciales
-  updateExchangeUI()
+  updateExchangeUI();
 
   // Verificar si hay una fecha seleccionada desde el horario
   if (window.scheduleState && window.scheduleState.selectedDate) {
-    const selectedDate = window.scheduleState.selectedDate
-    exchangeDateInput.value = selectedDate.toISOString().split("T")[0]
+    const selectedDate = window.scheduleState.selectedDate;
+    exchangeDateInput.value = selectedDate.toISOString().split("T")[0];
   }
 }
 
 /**
-  * Cambiar el estado de disponibilidad de intercambio
+ * Cambiar el estado de disponibilidad de intercambio
  */
 function toggleExchangeStatus() {
-  exchangeState.isAvailable = exchangeStatusToggle.checked
-  updateExchangeUI()
+  exchangeState.isAvailable = exchangeStatusToggle.checked;
+  updateExchangeUI();
 
   // Enviar actualización de estado a la API
-  updateExchangeStatusAPI(exchangeState.isAvailable)
+  updateExchangeStatusAPI(exchangeState.isAvailable);
 
   // Show notification based on status
   if (exchangeState.isAvailable) {
-    showNotification("Estado de disponibilidad para intercambio activado", "success")
+    showNotification(
+      "Estado de disponibilidad para intercambio activado",
+      "success"
+    );
   } else {
-    showNotification("Estado de disponibilidad para intercambio desactivado", "info")
+    showNotification(
+      "Estado de disponibilidad para intercambio desactivado",
+      "info"
+    );
   }
 }
 
@@ -78,26 +92,30 @@ function toggleExchangeStatus() {
  */
 function updateExchangeUI() {
   // Actualizar el toggle y el texto
-  exchangeStatusToggle.checked = exchangeState.isAvailable
+  exchangeStatusToggle.checked = exchangeState.isAvailable;
   exchangeStatusText.textContent = exchangeState.isAvailable
     ? "Disponible para intercambio"
-    : "No disponible para intercambio"
+    : "No disponible para intercambio";
 
   // Mostrar/ocultar detalles de disponibilidad
   if (exchangeAvailabilityDetails) {
-    exchangeAvailabilityDetails.style.display = exchangeState.isAvailable ? "block" : "none"
+    exchangeAvailabilityDetails.style.display = exchangeState.isAvailable
+      ? "block"
+      : "none";
   }
 
   // Mostrar/ocultar advertencia de estado de intercambio
   if (exchangeStatusWarning) {
-    exchangeStatusWarning.style.display = exchangeState.isAvailable ? "none" : "block"
+    exchangeStatusWarning.style.display = exchangeState.isAvailable
+      ? "none"
+      : "block";
   }
 
   // Actualizar fechas disponibles
-  updateAvailableDatesDisplay()
+  updateAvailableDatesDisplay();
 
   // Actualizar tablas de solicitudes
-  updateRequestTables()
+  updateRequestTables();
 }
 
 /**
@@ -105,74 +123,75 @@ function updateExchangeUI() {
  */
 function showAddDateModal() {
   // Resetear el input
-  availableDateInput.value = ""
+  availableDateInput.value = "";
 
   // Mostrar el modal
-  addDateModal.show()
+  addDateModal.show();
 }
 
 /**
  * Guardar una fecha disponible
  */
 function saveAvailableDate() {
-  const dateStr = availableDateInput.value
+  const dateStr = availableDateInput.value;
   if (!dateStr) {
-    showNotification("Por favor seleccione una fecha", "warning")
-    return
+    showNotification("Por favor seleccione una fecha", "warning");
+    return;
   }
 
   // Verificar si la fecha ya existe
   if (exchangeState.availableDates.includes(dateStr)) {
-    showNotification("Esta fecha ya está en sus fechas disponibles", "warning")
-    return
+    showNotification("Esta fecha ya está en sus fechas disponibles", "warning");
+    return;
   }
 
   // Añadir fecha al estado
-  exchangeState.availableDates.push(dateStr)
+  exchangeState.availableDates.push(dateStr);
 
   // Actualizar la interfaz
-  updateAvailableDatesDisplay()
+  updateAvailableDatesDisplay();
 
   // Ocultar el modal
-  addDateModal.hide()
+  addDateModal.hide();
 
   // Enviar actualización a la API
-  updateAvailableDatesAPI(exchangeState.availableDates)
+  updateAvailableDatesAPI(exchangeState.availableDates);
 
   // Mostrar notificación
-  showNotification("Fecha añadida exitosamente", "success")
+  showNotification("Fecha añadida exitosamente", "success");
 }
 
 /**
  * Actualizar la visualización de fechas disponibles
  */
 function updateAvailableDatesDisplay() {
-  if (!availableDates) return
+  if (!availableDates) return;
 
   if (exchangeState.availableDates.length === 0) {
-    availableDates.innerHTML = '<p class="text-muted">No hay fechas añadidas aún</p>'
-    return
+    availableDates.innerHTML =
+      '<p class="text-muted">No hay fechas añadidas aún</p>';
+    return;
   }
 
-  let datesHTML = ""
+  let datesHTML = "";
   exchangeState.availableDates.forEach((dateStr) => {
-    const formattedDate = formatDateString(dateStr)
+    const formattedDate = formatDateString(dateStr);
     datesHTML += `
             <div class="date-badge">
                 ${formattedDate}
                 <span class="remove-date" data-date="${dateStr}">×</span>
             </div>
-        `
-  })
+        `;
+  });
 
-  availableDates.innerHTML = datesHTML
+  availableDates.innerHTML = datesHTML;
 
   // Añadir event listeners a los botones de eliminación
   document.querySelectorAll(".remove-date").forEach((btn) => {
     btn.addEventListener("click", function () {
-      removeAvailableDate(this.dataset.date)
-    })
-  })
+      removeAvailableDate(this.dataset.date);
+    });
+  });
 }
 
 /**
@@ -181,16 +200,103 @@ function updateAvailableDatesDisplay() {
  */
 function removeAvailableDate(dateStr) {
   // Eliminar fecha del estado
-  exchangeState.availableDates = exchangeState.availableDates.filter((date) => date !== dateStr)
+  exchangeState.availableDates = exchangeState.availableDates.filter(
+    (date) => date !== dateStr
+  );
 
   // Actualizar la interfaz
-  updateAvailableDatesDisplay()
+  updateAvailableDatesDisplay();
 
   // Enviar actualización a la API
-  updateAvailableDatesAPI(exchangeState.availableDates)
+  updateAvailableDatesAPI(exchangeState.availableDates);
 
   // Mostrar notificación
-  showNotification("Fecha eliminada", "info")
+  showNotification("Fecha eliminada", "info");
+}
+
+/**
+ * Cargar y renderizar empleados disponibles y renderizarlos en el select
+ */
+
+async function loadAvailableEmployees() {
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:8000/getintercambioHorario"
+    );
+    const empleados = response.data;
+    console.log("empleados para el intercambio", empleados[0]);
+
+    // Obtener el select element
+    const employeeSelect = document.getElementById("exchange-employee");
+
+    // Limpiar opciones existentes
+    employeeSelect.innerHTML =
+      '<option value="">Seleccione un empleado</option>';
+
+    // Verificar si empleados es un array
+    if (Array.isArray(empleados)) {
+      // Filtrar y renderizar solo empleados disponibles
+      empleados.forEach((emp) => {
+        // Verificar que emp y sus propiedades existan
+        if (emp && emp.estado && emp.estado.toLowerCase() === "disponible") {
+          const option = document.createElement("option");
+          option.value = emp.id_empleado || "";
+          option.textContent =
+            emp.Nombre_solicitante || "nombre empleado ejemplo";
+          employeeSelect.appendChild(option);
+
+          console.log("Empleado añadido a las opciones para intercambiar:", {
+            id: emp.id_empleado,
+            nombre: emp.Nombre_solicitante,
+            estado: emp.estado,
+          });
+        }
+      });
+    }
+
+    showNotification("Empleados cargados exitosamente", "success");
+  } catch (error) {
+    console.error("Error cargando empleados:", error);
+    showNotification("Error al cargar empleados", "error");
+  }
+}
+
+/**
+ * Cargar solicitudes del empleado actual
+ */
+async function loadEmployeeRequests() {
+  try {
+    // Obtener ID del empleado actual del localStorage
+    const currentEmployee = localStorage.getItem("id_usuario");
+
+    if (!currentEmployee) {
+      console.warn("No hay información del empleado actual en el localStorage");
+      return;
+    }
+
+    const response = await axios.get(
+      `https://api.example.com/solicitudes/${currentEmployee}`
+    );
+    const solicitudes = response.data;
+
+    // Actualizar el estado de intercambios
+    exchangeState.incomingRequests = solicitudes.map((sol) => ({
+      id: sol.id_solicitante,
+      employeeId: sol.id_empleado_solicitado,
+      employeeName: sol.nombre_solicitante,
+      date: sol.fecha_intercambio,
+      reason: sol.descripcion,
+      status: sol.estado,
+      createdAt: new Date().toISOString(), // Asumiendo que necesitas una fecha de creación
+    }));
+
+    // Actualizar la interfaz
+    updateRequestTables();
+    showNotification("Solicitudes actualizadas", "success");
+  } catch (error) {
+    console.error("Error cargando solicitudes:", error);
+    showNotification("Error al cargar solicitudes", "error");
+  }
 }
 
 /**
@@ -198,33 +304,35 @@ function removeAvailableDate(dateStr) {
  * @param {Event} e - El evento de envío del formulario
  */
 function submitExchangeRequest(e) {
-  e.preventDefault()
+  e.preventDefault();
 
   // Verificar si el estado de intercambio está habilitado
   if (!exchangeState.isAvailable) {
     showNotification(
       "No puede enviar solicitudes de intercambio porque su estado de disponibilidad está desactivado. Por favor, active su disponibilidad primero.",
-      "warning",
-    )
-    return
+      "warning"
+    );
+    return;
   }
 
   // Obtener datos del formulario
-  const date = document.getElementById("exchange-date").value
-  const employeeId = document.getElementById("exchange-employee").value
-  const reason = document.getElementById("exchange-reason").value
+  const date = document.getElementById("exchange-date").value;
+  console.log("fecha seleccionada", date);
+  const employeeId = document.getElementById("exchange-employee").value;
+  const reason = document.getElementById("exchange-reason").value;
 
   if (!date || !employeeId || !reason) {
-    showNotification("Por favor complete todos los campos", "warning")
-    return
+    showNotification("Por favor complete todos los campos", "warning");
+    return;
   }
 
   // Obtener información del empleado seleccionado
-  const employeeSelect = document.getElementById("exchange-employee")
-  const selectedEmployee = employeeSelect.options[employeeSelect.selectedIndex].text
+  const employeeSelect = document.getElementById("exchange-employee");
+  const selectedEmployee =
+    employeeSelect.options[employeeSelect.selectedIndex].text;
 
   // Crear objeto de solicitud con fecha actual
-  const currentDate = new Date()
+  const currentDate = new Date();
   const request = {
     id: Date.now(), // Usar timestamp como ID
     date: date,
@@ -233,19 +341,19 @@ function submitExchangeRequest(e) {
     reason: reason,
     status: "Pending",
     createdAt: currentDate.toISOString(),
-  }
+  };
 
   // Añadir a las solicitudes enviadas
-  exchangeState.outgoingRequests.push(request)
+  exchangeState.outgoingRequests.push(request);
 
   // Actualizar la interfaz
-  updateRequestTables()
+  updateRequestTables();
 
   // Resetear el formulario
-  exchangeRequestForm.reset()
+  exchangeRequestForm.reset();
 
   // Enviar solicitud a la API
-  sendExchangeRequestAPI(request)
+  sendExchangeRequestAPI(request);
 
   // Formatear fecha para mostrar en notificación
   const formattedDate = new Date(date).toLocaleDateString([], {
@@ -253,13 +361,13 @@ function submitExchangeRequest(e) {
     year: "numeric",
     month: "long",
     day: "numeric",
-  })
+  });
 
   // Mostrar notificación con detalles
   showNotification(
     `Solicitud de intercambio enviada correctamente para el ${formattedDate} con ${selectedEmployee}`,
-    "success",
-  )
+    "success"
+  );
 }
 
 /**
@@ -267,12 +375,13 @@ function submitExchangeRequest(e) {
  */
 function updateRequestTables() {
   // Actualizar solicitudes recibidas
-  if (!incomingRequests) return
+  if (!incomingRequests) return;
 
   if (exchangeState.incomingRequests.length === 0) {
-    incomingRequests.innerHTML = '<tr><td colspan="5" class="text-center">No hay solicitudes recibidas</td></tr>'
+    incomingRequests.innerHTML =
+      '<tr><td colspan="5" class="text-center">No hay solicitudes recibidas</td></tr>';
   } else {
-    let incomingHTML = ""
+    let incomingHTML = "";
     exchangeState.incomingRequests.forEach((request) => {
       incomingHTML += `
                 <tr>
@@ -280,7 +389,13 @@ function updateRequestTables() {
                     <td>${formatDateString(request.date)}</td>
                     <td>${request.reason}</td>
                     <td>
-                        <span class="badge ${request.status === "Approved" ? "bg-success" : request.status === "Rejected" ? "bg-danger" : "bg-warning"}">
+                        <span class="badge ${
+                          request.status === "Approved"
+                            ? "bg-success"
+                            : request.status === "Rejected"
+                            ? "bg-danger"
+                            : "bg-warning"
+                        }">
                             ${request.status}
                         </span>
                     </td>
@@ -299,35 +414,41 @@ function updateRequestTables() {
                         }
                     </td>
                 </tr>
-            `
-    })
+            `;
+    });
 
-    incomingRequests.innerHTML = incomingHTML
+    incomingRequests.innerHTML = incomingHTML;
 
     // Añadir event listeners a los botones de acción
-    document.querySelectorAll("[data-action='approve'], [data-action='reject']").forEach((btn) => {
-      btn.addEventListener("click", function () {
-        const requestId = Number.parseInt(this.dataset.requestId)
-        const action = this.dataset.action
-        handleRequestAction(requestId, action)
-      })
-    })
+    document
+      .querySelectorAll("[data-action='approve'], [data-action='reject']")
+      .forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const requestId = Number.parseInt(this.dataset.requestId);
+          const action = this.dataset.action;
+          handleRequestAction(requestId, action);
+        });
+      });
   }
 
   // Actualizar solicitudes enviadas
-  if (!outgoingRequests) return
+  if (!outgoingRequests) return;
 
   if (exchangeState.outgoingRequests.length === 0) {
-    outgoingRequests.innerHTML = '<tr><td colspan="5" class="text-center">No hay solicitudes enviadas</td></tr>'
+    outgoingRequests.innerHTML =
+      '<tr><td colspan="5" class="text-center">No hay solicitudes enviadas</td></tr>';
   } else {
-    let outgoingHTML = ""
+    let outgoingHTML = "";
     exchangeState.outgoingRequests.forEach((request) => {
       // Formatear fecha de creación
-      const createdAtDate = new Date(request.createdAt)
+      const createdAtDate = new Date(request.createdAt);
       const formattedCreatedAt =
         createdAtDate.toLocaleDateString() +
         " " +
-        createdAtDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        createdAtDate.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
 
       outgoingHTML += `
                 <tr>
@@ -335,7 +456,13 @@ function updateRequestTables() {
                     <td>${formatDateString(request.date)}</td>
                     <td>${request.reason}</td>
                     <td>
-                        <span class="badge ${request.status === "Approved" ? "bg-success" : request.status === "Rejected" ? "bg-danger" : "bg-warning"}">
+                        <span class="badge ${
+                          request.status === "Approved"
+                            ? "bg-success"
+                            : request.status === "Rejected"
+                            ? "bg-danger"
+                            : "bg-warning"
+                        }">
                             ${request.status}
                         </span>
                         <div class="text-muted small mt-1">Enviado: ${formattedCreatedAt}</div>
@@ -352,18 +479,18 @@ function updateRequestTables() {
                         }
                     </td>
                 </tr>
-            `
-    })
+            `;
+    });
 
-    outgoingRequests.innerHTML = outgoingHTML
+    outgoingRequests.innerHTML = outgoingHTML;
 
     // Añadir event listeners a los botones de cancelación
     document.querySelectorAll('[data-action="cancel"]').forEach((btn) => {
       btn.addEventListener("click", function () {
-        const requestId = Number.parseInt(this.dataset.requestId)
-        cancelExchangeRequest(requestId)
-      })
-    })
+        const requestId = Number.parseInt(this.dataset.requestId);
+        cancelExchangeRequest(requestId);
+      });
+    });
   }
 }
 
@@ -374,22 +501,28 @@ function updateRequestTables() {
  */
 function handleRequestAction(requestId, action) {
   // Encontrar la solicitud
-  const requestIndex = exchangeState.incomingRequests.findIndex((req) => req.id === requestId)
+  const requestIndex = exchangeState.incomingRequests.findIndex(
+    (req) => req.id === requestId
+  );
   if (requestIndex === -1) {
-    return
+    return;
   }
 
   // Actualizar el estado de la solicitud
-  exchangeState.incomingRequests[requestIndex].status = action === "approve" ? "Approved" : "Rejected"
+  exchangeState.incomingRequests[requestIndex].status =
+    action === "approve" ? "Approved" : "Rejected";
 
   // Actualizar la interfaz
-  updateRequestTables()
+  updateRequestTables();
 
   // Enviar actualización a la API
-  updateRequestStatusAPI(requestId, action)
+  updateRequestStatusAPI(requestId, action);
 
   // Mostrar notificación
-  showNotification(`Solicitud ${action === "approve" ? "aprobada" : "rechazada"} exitosamente`, "success")
+  showNotification(
+    `Solicitud ${action === "approve" ? "aprobada" : "rechazada"} exitosamente`,
+    "success"
+  );
 }
 
 /**
@@ -398,16 +531,20 @@ function handleRequestAction(requestId, action) {
  */
 function cancelExchangeRequest(requestId) {
   // Encontrar la solicitud para obtener detalles para la notificación
-  const request = exchangeState.outgoingRequests.find((req) => req.id === requestId)
+  const request = exchangeState.outgoingRequests.find(
+    (req) => req.id === requestId
+  );
 
   // Eliminar la solicitud del estado
-  exchangeState.outgoingRequests = exchangeState.outgoingRequests.filter((req) => req.id !== requestId)
+  exchangeState.outgoingRequests = exchangeState.outgoingRequests.filter(
+    (req) => req.id !== requestId
+  );
 
   // Actualizar la interfaz
-  updateRequestTables()
+  updateRequestTables();
 
   // Enviar actualización a la API
-  cancelRequestAPI(requestId)
+  cancelRequestAPI(requestId);
 
   // Mostrar notificación con detalles si la solicitud fue encontrada
   if (request) {
@@ -416,13 +553,13 @@ function cancelExchangeRequest(requestId) {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
+    });
     showNotification(
       `Solicitud de intercambio con ${request.employeeName} para el ${formattedDate} ha sido cancelada`,
-      "info",
-    )
+      "info"
+    );
   } else {
-    showNotification("Solicitud cancelada", "info")
+    showNotification("Solicitud cancelada", "info");
   }
 }
 
@@ -432,8 +569,12 @@ function cancelExchangeRequest(requestId) {
  * @returns {string} - Fecha formateada
  */
 function formatDateString(dateStr) {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" })
+  const date = new Date(dateStr);
+  return date.toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 /**
@@ -441,7 +582,7 @@ function formatDateString(dateStr) {
  */
 function loadMockExchangeData() {
   // Mock available dates
-  exchangeState.availableDates = ["2025-04-10", "2025-04-15"]
+  exchangeState.availableDates = ["2025-04-10", "2025-04-15"];
 
   // datos de solicitudes recibidas
   exchangeState.incomingRequests = [
@@ -463,7 +604,7 @@ function loadMockExchangeData() {
       status: "Aprobado",
       createdAt: "2025-03-28T14:15:00Z",
     },
-  ]
+  ];
 
   // datos de solicitudes enviadas
   exchangeState.outgoingRequests = [
@@ -476,7 +617,7 @@ function loadMockExchangeData() {
       status: "Pendiente",
       createdAt: "2025-04-01T09:45:00Z",
     },
-  ]
+  ];
 }
 
 /**
@@ -488,9 +629,9 @@ function updateExchangeStatusAPI(isAvailable) {
   const apiData = {
     employeeId: "current-user-id", // Esto vendría de la autenticación
     isAvailable: isAvailable,
-  }
+  };
 
-  console.log("Actualizando estado de disponibilidad:", apiData)
+  console.log("Actualizando estado de disponibilidad:", apiData);
 
   // Enviar datos usando Axios
 
@@ -498,15 +639,15 @@ function updateExchangeStatusAPI(isAvailable) {
     axios
       .put("https://api.example.com/exchange/status", apiData)
       .then((response) => {
-        console.log("Exchange status updated successfully:", response.data)
+        console.log("Exchange status updated successfully:", response.data);
       })
       .catch((error) => {
-        console.error("Error actualizando el estado de disponibilidad:", error)
+        console.error("Error actualizando el estado de disponibilidad:", error);
         // Guardar solicitudes fallidas para reintentar
-        storeFailedRequest("exchange-status", apiData)
-      })
+        storeFailedRequest("exchange-status", apiData);
+      });
   } else {
-    console.warn("Axios no está definido. Las llamadas a la API fallarán.")
+    console.warn("Axios no está definido. Las llamadas a la API fallarán.");
   }
 }
 
@@ -519,9 +660,9 @@ function updateAvailableDatesAPI(dates) {
   const apiData = {
     employeeId: "current-user-id", // Esto vendría de la autenticación
     availableDates: dates,
-  }
+  };
 
-  console.log("Actualizando fechas disponibles:", apiData)
+  console.log("Actualizando fechas disponibles:", apiData);
 
   // Enviar datos usando Axios
   // Asegurarse de que axios esté disponible globalmente o importado
@@ -529,15 +670,15 @@ function updateAvailableDatesAPI(dates) {
     axios
       .put("https://api.example.com/exchange/dates", apiData)
       .then((response) => {
-        console.log("Available dates updated successfully:", response.data)
+        console.log("Available dates updated successfully:", response.data);
       })
       .catch((error) => {
-        console.error("Error actualizando las fechas disponibles:", error)
+        console.error("Error actualizando las fechas disponibles:", error);
         // Guardar solicitudes fallidas para reintentar
-        storeFailedRequest("exchange-dates", apiData)
-      })
+        storeFailedRequest("exchange-dates", apiData);
+      });
   } else {
-    console.warn("Axios no está definido. Las llamadas a la API fallarán.")
+    console.warn("Axios no está definido. Las llamadas a la API fallarán.");
   }
 }
 
@@ -553,9 +694,9 @@ function sendExchangeRequestAPI(request) {
     date: request.date,
     reason: request.reason,
     requestDate: request.createdAt,
-  }
+  };
 
-  console.log("Enviando solicitud de intercambio a la API:", apiData)
+  console.log("Enviando solicitud de intercambio a la API:", apiData);
 
   // Enviar datos usando Axios
   // Asegurarse de que axios esté disponible globalmente o importado
@@ -563,15 +704,15 @@ function sendExchangeRequestAPI(request) {
     axios
       .post("https://api.example.com/exchange/requests", apiData)
       .then((response) => {
-        console.log("Exchange request sent successfully:", response.data)
+        console.log("Exchange request sent successfully:", response.data);
       })
       .catch((error) => {
-        console.error("Error enviando la solicitud de intercambio:", error)
+        console.error("Error enviando la solicitud de intercambio:", error);
         // Guardar solicitudes fallidas para reintentar
-        storeFailedRequest("exchange-request", apiData)
-      })
+        storeFailedRequest("exchange-request", apiData);
+      });
   } else {
-    console.warn("Axios no está definido. Las llamadas a la API fallarán.")
+    console.warn("Axios no está definido. Las llamadas a la API fallarán.");
   }
 }
 
@@ -587,9 +728,9 @@ function updateRequestStatusAPI(requestId, action) {
     action: action,
     employeeId: "current-user-id", // Esto vendría de la autenticación
     actionDate: new Date().toISOString(),
-  }
+  };
 
-  console.log("Actualizando estado de solicitud:", apiData)
+  console.log("Actualizando estado de solicitud:", apiData);
 
   // Send data using Axios
   // Asegurarse de que axios esté disponible globalmente o importado
@@ -597,15 +738,15 @@ function updateRequestStatusAPI(requestId, action) {
     axios
       .put("https://api.example.com/exchange/requests/" + requestId, apiData)
       .then((response) => {
-        console.log("Request status updated successfully:", response.data)
+        console.log("Request status updated successfully:", response.data);
       })
       .catch((error) => {
-        console.error("Error actualizando el estado de la solicitud:", error)
+        console.error("Error actualizando el estado de la solicitud:", error);
         // Guardar solicitudes fallidas para reintentar
-        storeFailedRequest("exchange-status-update", apiData)
-      })
+        storeFailedRequest("exchange-status-update", apiData);
+      });
   } else {
-    console.warn("Axios no está definido. Las llamadas a la API fallarán.")
+    console.warn("Axios no está definido. Las llamadas a la API fallarán.");
   }
 }
 
@@ -619,25 +760,27 @@ function cancelRequestAPI(requestId) {
     requestId: requestId,
     employeeId: "current-user-id", // Esto vendría de la autenticación
     cancelDate: new Date().toISOString(),
-  }
+  };
 
-  console.log("Cancelando solicitud:", apiData)
+  console.log("Cancelando solicitud:", apiData);
 
   // Send data using Axios
   // Asegurarse de que axios esté disponible globalmente o importado
   if (typeof axios !== "undefined") {
     axios
-      .delete("https://api.example.com/exchange/requests/" + requestId, { data: apiData })
+      .delete("https://api.example.com/exchange/requests/" + requestId, {
+        data: apiData,
+      })
       .then((response) => {
-        console.log("Request cancelled successfully:", response.data)
+        console.log("Request cancelled successfully:", response.data);
       })
       .catch((error) => {
-        console.error("Error cancelando la solicitud:", error)
+        console.error("Error cancelando la solicitud:", error);
         // Guardar solicitudes fallidas para reintentar
-        storeFailedRequest("exchange-cancel", apiData)
-      })
+        storeFailedRequest("exchange-cancel", apiData);
+      });
   } else {
-    console.warn("Axios no está definido. Las llamadas a la API fallarán.")
+    console.warn("Axios no está definido. Las llamadas a la API fallarán.");
   }
 }
 
@@ -647,13 +790,15 @@ function cancelRequestAPI(requestId) {
  * @param {Object} data - Los datos de la solicitud
  */
 function storeFailedRequest(type, data) {
-  const failedRequests = JSON.parse(localStorage.getItem("failedRequests") || "[]")
+  const failedRequests = JSON.parse(
+    localStorage.getItem("failedRequests") || "[]"
+  );
   failedRequests.push({
     type,
     data,
     timestamp: new Date().toISOString(),
-  })
-  localStorage.setItem("failedRequests", JSON.stringify(failedRequests))
+  });
+  localStorage.setItem("failedRequests", JSON.stringify(failedRequests));
 }
 
 /**
@@ -663,26 +808,25 @@ function storeFailedRequest(type, data) {
  */
 function showNotification(message, type) {
   // Create notification element
-  const notification = document.createElement("div")
-  notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`
-  notification.style.zIndex = "9999"
+  const notification = document.createElement("div");
+  notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+  notification.style.zIndex = "9999";
   notification.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
+    `;
 
   // Añadir al documento
-  document.body.appendChild(notification)
+  document.body.appendChild(notification);
 
   // Eliminar automáticamente después de 5 segundos
   setTimeout(() => {
-    notification.classList.remove("show")
+    notification.classList.remove("show");
     setTimeout(() => {
-      document.body.removeChild(notification)
-    }, 150)
-  }, 5000)
+      document.body.removeChild(notification);
+    }, 150);
+  }, 5000);
 }
 
 // Inicializar la funcionalidad de intercambio cuando el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", initExchange)
-
+document.addEventListener("DOMContentLoaded", initExchange);

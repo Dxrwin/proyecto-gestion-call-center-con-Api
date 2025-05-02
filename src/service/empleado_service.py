@@ -2,6 +2,7 @@
 from sqlalchemy.orm import Session
 from src.databases import tables_model
 from src.models.empleado_schema import EmpleadoCreate
+from src.models.horario_schema import HorarioCreate
 from fastapi import HTTPException
 
 
@@ -24,7 +25,7 @@ def create_empleado(db:Session, empleado:EmpleadoCreate):
 
 
 #insertar empleado y login
-def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate):
+def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate,horario:HorarioCreate):
     try:
         # Crear un nuevo registro en la tabla empleados
         nuevo_empleado = tables_model.Empleado(
@@ -59,10 +60,21 @@ def insertar_empleado_y_login(db: Session, empleado: EmpleadoCreate):
             rol=empleado.rol  # Por defecto el empleado es un empleado normal (no admin)
         )
         db.add(nuevo_login)
-
+        db.flush()
+        nuevo_horario = tables_model.HorarioEmpleado(
+            id_empleado=nuevo_empleado.id,
+            tipo_evento=horario.tipo_evento,
+            titulo_evento=horario.titulo_evento,
+            hora_ingreso=horario.hora_ingreso,
+            hora_salida=horario.hora_salida,
+            descripcion=horario.descripcion
+        )
+        db.add(nuevo_horario)
         # Confirmar la transacción
         db.commit()
-        db.refresh(nuevo_empleado)  # Actualizamos el objeto con los datos de la base de datos
+        db.refresh(nuevo_empleado)
+        db.refresh(nuevo_login)
+        db.refresh(nuevo_horario)# Actualizamos el objeto con los datos de la base de datos
         return nuevo_empleado  # Devolvemos el objeto Empleado completo
     except Exception as e:
         db.rollback()  # Revertir la transacción en caso de error

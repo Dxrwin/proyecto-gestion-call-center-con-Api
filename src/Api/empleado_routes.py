@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from src.databases.db import SessionLocal
 from src.service import empleado_service
 from src.models.empleado_schema import EmpleadoCreate, EmpleadoOut
+from src.models.horario_schema import HorarioCreate
 
 #creamos un router para agrupar las rutas de empleado
 router = APIRouter()
@@ -17,8 +18,8 @@ def get_db():
         
 #ruta para crear un empleado
 @router.post("/empleado", response_model=EmpleadoOut)
-def crear_Empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
-    db_empleado = empleado_service.create_empleado(db,empleado)
+def crear_Empleado(empleado: EmpleadoCreate,horario:HorarioCreate, db: Session = Depends(get_db)):
+    db_empleado = empleado_service.create_empleado(db,empleado,horario)
     
     if not db_empleado:
         print("status_code=400, error al crear el empleado")
@@ -30,8 +31,8 @@ def crear_Empleado(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
 
 #ruta para insertar empleado y login
 @router.post("/empleadoylogin", response_model=EmpleadoOut)
-def insertar_empleado_y_login(empleado: EmpleadoCreate, db: Session = Depends(get_db)):
-    db_empleado = empleado_service.insertar_empleado_y_login(db, empleado)
+def insertar_empleado_y_login(empleado: EmpleadoCreate,horario:HorarioCreate, db: Session = Depends(get_db)):
+    db_empleado = empleado_service.insertar_empleado_y_login(db, empleado,horario)
     
     if not db_empleado:
         raise HTTPException(status_code=400, detail="error al insertar el empleado")
