@@ -275,19 +275,19 @@ async function loadEmployeeRequests() {
     }
 
     const response = await axios.get(
-      `https://api.example.com/solicitudes/${currentEmployee}`
+      `http://127.0.0.1:8000/intercambio/${currentEmployee}`
     );
     const solicitudes = response.data;
 
     // Actualizar el estado de intercambios
     exchangeState.incomingRequests = solicitudes.map((sol) => ({
-      id: sol.id_solicitante,
-      employeeId: sol.id_empleado_solicitado,
-      employeeName: sol.nombre_solicitante,
+      id: sol.id,
+      employeeId: sol.id_empleado,
+      employeeName: sol.Nombre_solicitante,
       date: sol.fecha_intercambio,
-      reason: sol.descripcion,
+      reason: sol.Descripcion,
       status: sol.estado,
-      createdAt: new Date().toISOString(), // Asumiendo que necesitas una fecha de creación
+      createdAt: sol.fecha_solicitud, // Asumiendo que necesitas una fecha de creación
     }));
 
     // Actualizar la interfaz
