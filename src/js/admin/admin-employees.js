@@ -874,6 +874,7 @@ function saveEmployee() {
   // Obtener los datos del formulario modal
   const employeeData = {
     Id_empleado: document.getElementById("emp-Id_empleado").value,
+    imagen_perfil:"imgProfileGhost.jpeg",
     nombre: document.getElementById("emp-first-name").value,
     apellido: document.getElementById("emp-last-name").value,
     correo: document.getElementById("emp-email").value,

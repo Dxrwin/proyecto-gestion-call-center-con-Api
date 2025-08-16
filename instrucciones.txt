@@ -4,4 +4,4 @@ en caso de no tener clonado el repositorio ahcer:
 3.activar el entorno virtual = .\venv\Scripts\activate
 
 dado el caso que tenga todos los aarchivos sincronizadosy completos:
-4.levantar servidor = unicorn main:app --reload
+4.levantar servidor = uvicorn src.main:app --reload

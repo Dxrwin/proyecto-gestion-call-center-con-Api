@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class EmpleadoBase(BaseModel):
     
     Id_empleado: str 
-    #imagen_perfil: str
+    imagen_perfil: str
     nombre: str
     apellido: str
     fecha_nacimiento: str
